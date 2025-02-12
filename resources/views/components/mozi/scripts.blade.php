@@ -1,0 +1,27 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="{{ asset('assets/notification.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		<script src="{{ asset('assets/assets/plugins/global/plugins.bundle.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/scripts.bundle.js') }}"></script>
+		<script src="{{ asset('assets/assets/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
+		<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
+		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
+		<script src="{{ asset('assets/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/widgets.bundle.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/pages/general/pos.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/widgets.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/apps/chat/chat.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/utilities/modals/create-app.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/utilities/modals/new-target.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/utilities/modals/users-search.js') }}"></script>
+		<script src="{{ asset('assets/assets/js/custom/account/referrals/referral-program.js') }}"></script>
