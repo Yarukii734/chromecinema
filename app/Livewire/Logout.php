@@ -2,8 +2,9 @@
 
 namespace App\Livewire;
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\Log;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Logout extends Component {
 
@@ -12,6 +13,15 @@ class Logout extends Component {
     }
 
     public function logout() {
+
+        if (Auth::check()) {
+            Log::create([
+                'user_id' => Auth::id(),
+                'action' => 'Kijelentkezés',
+                'details' => 'Sikeresen kijelentkeztél.',
+            ]);
+        }
+
 
         Auth::logout();        
         session()->invalidate();
