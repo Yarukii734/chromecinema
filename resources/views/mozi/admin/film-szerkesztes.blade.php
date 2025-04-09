@@ -39,50 +39,74 @@
             <!--begin::Content container-->
             <div id="kt_app_content_container" class="app-container container-md">
                 <div class="row" bis_skin_checked="1">
-                    <div class="card mb-5 mb-xl-8" bis_skin_checked="1">
+                    <div class="card mb-5 mb-xl-8">
                         <!--begin::Header-->
-                        <div class="card-header border-0 pt-5" bis_skin_checked="1">
+                        <div class="card-header border-0 pt-5">
                             <h3 class="card-title align-items-start flex-column">
                                 <span class="card-label fw-bold fs-3 mb-1">Filmek listázása</span>
-                                <span class="text-muted mt-1 fw-semibold fs-7">Jelenleg <b>{{ $moviesCount}} darab</b> filmmel rendelkezünk.</span>
+                                <!-- Kiírjuk, hány találat van, és a keresett kifejezés is megjelenhet -->
+                                <span class="text-muted mt-1 fw-semibold fs-7">
+                                    Jelenleg <b>{{ $movies->total() }} darab</b> film található
+                                    @if($kereses)
+                                    <span>a <b>"{{ $kereses }}"</b> kifejezésre keresve</span>
+                                @endif
+                                </span>
                             </h3>
-                            <div class="card-toolbar" bis_skin_checked="1">
+                            <div class="card-toolbar">
+                                <div>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="ki-duotone ki-magnifier fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <input type="text" class="form-control" wire:model="kereses" placeholder="Film neve">
+                                        <button class="btn btn-primary me-2 mb-2 mb-md-0 text-white" type="button" wire:loading.attr="disabled" wire:target="search" wire:click="search">
+                                            <span wire:loading.remove="" wire:target="search"><i class="fa-solid fa-check"></i></span>
+                                            <span wire:loading="" wire:target="search">
+                                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
                                 <a href="{{ route('mozi.admin.filmfeltoltes') }}" class="btn btn-sm btn-light-primary">
-                                <i class="ki-duotone ki-plus fs-2"></i>Új film létrehozása</a>
+                                    <i class="ki-duotone ki-plus fs-2"></i>Új film létrehozása
+                                </a>
                             </div>
                         </div>
                         <!--end::Header-->
+                        
                         <!--begin::Body-->
-                        @if($movies && count($movies) > 0)
-                        <div class="card-body py-3" bis_skin_checked="1">
+                        @if($movies && $movies->isNotEmpty())
+                        <div class="card-body py-3">
                             <!--begin::Table container-->
-                            <div class="table-responsive" bis_skin_checked="1">
+                            <div class="table-responsive">
                                 <!--begin::Table-->
                                 <table class="table align-middle gs-0 gy-4">
                                     <!--begin::Table head-->
                                     <thead>
                                         <tr class="fw-bold text-muted bg-light">
-                                            <th class="ps-4 min-w-325px rounded-start">Film név</th>
+                                            <th class="ps-4 min-w-330px rounded-start">Film név</th>
                                             <th class="min-w-125px">Ár</th>
                                             <th class="min-w-125px">Kiadás éve</th>
-                                            <th class="min-w-200px">Darabszám</th>
+                                            <th class="min-w-125px">Darabszám</th>
+                                            <th class="min-w-200px">Feltöltve</th>
                                             <th class="min-w-150px">Kategória név</th>
                                             <th class="min-w-200px text-end rounded-end"></th>
                                         </tr>
                                     </thead>
-                                    
                                     <!--end::Table head-->
                                     <!--begin::Table body-->
                                     <tbody>
-
                                         @foreach ($movies as $movie)
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center" bis_skin_checked="1">
-                                                    <div class="symbol symbol-60px me-5" bis_skin_checked="1">
-                                                        <img src="{{ $movie->filmkep }}" class="" alt="">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-60px me-5">
+                                                        <img src="{{ $movie->filmkep }}" alt="">
                                                     </div>
-                                                    <div class="d-flex justify-content-start flex-column" bis_skin_checked="1">
+                                                    <div class="d-flex justify-content-start flex-column">
                                                         <a href="#" class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{ $movie->filmnev }}</a>
                                                         <span class="text-muted fw-semibold text-muted d-block fs-7">Megnevezés</span>
                                                     </div>
@@ -101,7 +125,11 @@
                                                 <span class="text-muted fw-semibold text-muted d-block fs-7">Darab</span>
                                             </td>
                                             <td>
-                                                <span class="badge badge-light-{{ $movie->Category()->first()->color }} fs-7 fw-bold">{{ $movie->Category()->first()->nev }}</span>
+                                                <a href="#" class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{ $movie->created_at }}</a>
+                                                <span class="text-muted fw-semibold text-muted d-block fs-7">Dátum</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-light-{{ $movie->category()->first()->color }} fs-7 fw-bold">{{ $movie->category()->first()->nev }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="#" data-bs-toggle="modal" data-bs-target="#admin_filmszerkesztes" wire:click.prevent="keresdafilmet({{ $movie->id }})" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
@@ -119,23 +147,28 @@
                                                         <span class="path5"></span>
                                                     </i>
                                                 </a>
+                                                <a href="#" wire:click.prevent="setSeatsToNull({{ $movie->id }})" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                                                    <i class="ki-duotone ki-eraser fs-2">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                        <span class="path3"></span>
+                                                    </i>
+                                                </a>
                                             </td>
-                                            
                                         </tr>
                                         @endforeach
                                     </tbody>
-                                    
                                     <!--end::Table body-->
                                 </table>
-                                {{ $movies->links() }}
+                                <!-- Oldalazás -->
+                                {{ $movies->links() }} <!-- Pagináció -->
                                 <!--end::Table-->
                             </div>
                             <!--end::Table container-->
-                            
                         </div>
                         @else 
-                        <div class="card-body py-3 flex-center text-center p-10" bis_skin_checked="1">
-                            <div class="table-responsive" bis_skin_checked="1">
+                        <div class="card-body py-3 flex-center text-center p-10">
+                            <div class="table-responsive">
                                 <!--begin::Table-->
                                 <table class="table align-middle gs-0 gy-4">
                                     <thead>
@@ -149,12 +182,14 @@
                                         </tr>
                                     </thead>
                                 </table>
+                                <div class="alert alert-warning">Nincs találat a keresésre.</div>
                             </div>
-                            <span class="text-muted fw-semibold text-muted d-block p-8 fs-7">Nincs elérhető film.</span>
                         </div>
                         @endif
-                        <!--begin::Body-->
                     </div>
+                    
+                    
+                    
                 </div>
            
             </div>
@@ -440,7 +475,7 @@
                                                             <span class="badge badge-light-primary flex-shrink-0 align-self-center py-3 px-4 fs-7" id="textfilmdarabszamPreview">10 darab</span>
                                                         </div>
                                                         <div class="text-center mt-5 mb-9" bis_skin_checked="1">
-                                                            <!--[if BLOCK]><![endif]-->                                                        <a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan2">Lefoglalás</a>
+                                                            <!--[if BLOCK]><![endif]-->                                                        <a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal" style="-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(79 153 183) 0%, rgb(16 197 132) 100%);" data-bs-target="#kt_modal_upgrade_plan2">Lefoglalás</a>
                                                             <!--[if ENDBLOCK]><![endif]-->
                                                         </div>
                                                     </div>
@@ -458,11 +493,21 @@
                     <!--begin::Actions-->
                     <div class="d-flex flex-center flex-row-fluid pt-12">
                         <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">Kilépés</button>
-                        <button type="submit" class="btn btn-primary" id="kt_modal_upgrade_plan_btn">
-                            <!--begin::Indicator label-->
-                            <span class="indicator-label">Szerkesztés véglegesítése</span>
-                            <!--end::Indicator label-->
-                            <!--end::Indicator progress-->
+                        <button type="submit" class="btn btn-primary" id="kt_careers_submit_button" style="-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(79 153 183) 0%, rgb(16 197 132) 100%);" wire:loading.attr="disabled">
+                            <span wire:loading.remove class="flex items-center justify-center">
+                                <span class="flex items-center justify-center">
+                                    Szerkesztés véglegesítése
+                                </span>
+                            </span>
+                            <span wire:loading class="flex items-center justify-center">
+                                <span class="flex items-center justify-center">
+                                    Feldolgozás...
+                                    <svg class="animate-spin h-5 w-5 ml-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                    </svg>
+                                </span>
+                            </span>
                         </button>
                     </div>
                     <!--end::Actions-->
