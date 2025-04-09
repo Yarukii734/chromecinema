@@ -12,7 +12,7 @@
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <!--begin::Item-->
                     <li class="breadcrumb-item text-muted">
-                        <a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Főoldal</a>
+                        <a href="{{ route('mozi.fooldal') }}" class="text-muted text-hover-primary">Főoldal</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -25,6 +25,9 @@
                     <!--end::Item-->
                 </ul>
                 <!--end::Breadcrumb-->
+            </div>
+            <div class="alert alert-info alert-warning fade show" role="alert" wire:offline>
+                <strong>Kapcsolati probléma!</strong> Úgy tűnik, hogy az internetkapcsolat megszakadt. Az adatok frissítése valószínűleg nem fog megfelelően működni. Kérjük, ellenőrizd a kapcsolatot.
             </div>
             <!--end::Page title-->
         </div>
@@ -43,7 +46,7 @@
                         <!--begin: Pic-->
                         <div class="me-7 mb-4" bis_skin_checked="1">
                             <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative" bis_skin_checked="1">
-                                <img src="assets/assets/media/avatars/300-1.jpg" alt="image">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="image">
                             
                             </div>
                         </div>
@@ -207,7 +210,7 @@
                                                     <span class="path1"></span>
                                                     <span class="path2"></span>
                                                 </i>
-                                                <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="4500" data-kt-countup-prefix="$" data-kt-initialized="1" bis_skin_checked="1">28.000 Ft</div>
+                                                <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="4500" data-kt-countup-prefix="$" data-kt-initialized="1" bis_skin_checked="1">{{ number_format(auth()->user()->total_spent, 0, ',', '.') }} Ft</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -223,7 +226,7 @@
                                                     <span class="path1"></span>
                                                     <span class="path2"></span>
                                                 </i>
-                                                <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="60" data-kt-countup-prefix="%" data-kt-initialized="1" bis_skin_checked="1">264</div>
+                                                <div class="fs-2 fw-bold counted" data-kt-countup="true" data-kt-countup-value="{{ auth()->user()->purchasedMoviesCountProfile() }}" data-kt-initialized="1" bis_skin_checked="1">{{ auth()->user()->purchasedMoviesCountProfile() }}</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -258,16 +261,6 @@
                             <a class="nav-link text-active-primary ms-0 me-10 py-5" id="biztonsag-line-tab" data-bs-toggle="tab" href="#biztonsag" role="tab" aria-controls="biztonsag" aria-selected="true">Biztonság</a>
                         </li>
                         <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item mt-2">
-                            <a class="nav-link text-active-primary ms-0 me-10 py-5" id="szamlazas-line-tab" data-bs-toggle="tab" href="#szamlazas" role="tab" aria-controls="szamlazas" aria-selected="true">Számlázás</a>
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item mt-2">
-                            <a class="nav-link text-active-primary ms-0 me-10 py-5" id="meghivasok-line-tab" data-bs-toggle="tab" href="#meghivasok" role="tab" aria-controls="meghivasok" aria-selected="true">Meghívások</a>
-                        </li>
-                        <!--end::Nav item-->
                     </ul>
                     <!--begin::Navs-->
                 </div>
@@ -278,13 +271,12 @@
                 <livewire:mozi.fiok.attekintes />
                 <livewire:mozi.fiok.beallitasok />
                 <livewire:mozi.fiok.biztonsag />
-                <livewire:mozi.fiok.szamlazas />
-                <livewire:mozi.fiok.meghivasok />
             </div>
             <!--end::details View-->
         </div>
         <!--end::Content container-->
     </div>
+
     <style>
         ::-webkit-scrollbar {
         display: none;
