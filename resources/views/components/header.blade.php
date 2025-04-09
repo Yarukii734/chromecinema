@@ -22,8 +22,17 @@
     <meta http-equiv="Content-Style-Type" content="text/css">
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <link rel="stylesheet" href="{{ asset('assets/authentikacio/css.css') }}">
-    <link href="{{ asset('assets/authentikacio/plugins.bundle.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/authentikacio/style.bundle22.css') }}" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="{{ asset('auth/reglog/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('auth/reglog/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('auth/reglog/flickity.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('auth/reglog/app.1740930162.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('auth/reglog/bootstrap-grid.min.1740930161.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('auth/reglog/content-styles.1740930161.css') }}">
+    <link rel="stylesheet" href="{{ asset('auth/reglog/scale.css') }}">
     <link rel="shortcut icon" href="https://i.imgur.com/dV7ewYm.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    
+    
