@@ -62,7 +62,7 @@
                     <div class="fw-semibold" bis_skin_checked="1">
                         <h4 class="text-gray-900 fw-bold">Kérjük vedd figyelembe!</h4>
                         <div class="fs-6 text-gray-700" bis_skin_checked="1">Ügyelj az adataid helyességére, amennyiben kitalált dolgokkal töltöd ki, fiókodat felfüggeszthetjük! Kattints a 
-                        <a class="fw-bold" href="../../demo1/dist/account/billing.html">beállításokhoz</a>.</div>
+                        <a class="fw-bold" href="{{ route('mozi.fiok') }}">beállításokhoz</a>.</div>
                     </div>
                     <!--end::Content-->
                 </div>
