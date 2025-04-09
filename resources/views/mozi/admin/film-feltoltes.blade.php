@@ -156,7 +156,7 @@
                                                 <!--begin::Col-->
                                                 <div class="col-md-6 fv-row fv-plugins-icon-container" bis_skin_checked="1">
                                                     <!--begin::Label-->
-                                                    <label class="required fs-5 fw-semibold mb-2">Időpont</label>
+                                                    <label class="required fs-5 fw-semibold mb-2">Időpont (pl. 12:45)</label>
                                                     <!--end::Label-->
                                                     <!--begin::Input-->
                                                     <input type="text" class="form-control form-control-solid"  wire:model="vetitesidopont" placeholder="" name="salary">
@@ -197,10 +197,21 @@
                                             <div class="separator mb-8" bis_skin_checked="1"></div>
                                             <!--end::Separator-->
                                             <!--begin::Submit-->
-                                            <button type="submit" class="btn btn-primary" id="kt_careers_submit_button">
-                                                <!--begin::Indicator label-->
-                                                <span class="indicator-label">Feltöltés</span>
-                                                <!--end::Indicator label-->
+                                            <button type="submit" class="btn btn-primary" id="kt_careers_submit_button" style="-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(79 153 183) 0%, rgb(16 197 132) 100%);" wire:loading.attr="disabled">
+                                                <span wire:loading.remove class="flex items-center justify-center">
+                                                    <span class="flex items-center justify-center">
+                                                        Feltöltés
+                                                    </span>
+                                                </span>
+                                                <span wire:loading class="flex items-center justify-center">
+                                                    <span class="flex items-center justify-center">
+                                                        Feldolgozás...
+                                                        <svg class="animate-spin h-5 w-5 ml-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                                        </svg>
+                                                    </span>
+                                                </span>
                                             </button>
                                             <!--end::Submit-->
                                         </form>
@@ -292,7 +303,7 @@
                                                     <span class="badge badge-light-primary flex-shrink-0 align-self-center py-3 px-4 fs-7" id="textfilmdarabszamPreview">10 darab</span>
                                                 </div>
                                                 <div class="text-center mt-5 mb-9" bis_skin_checked="1">
-                                                    <!--[if BLOCK]><![endif]-->                                                        <a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan2">Lefoglalás</a>
+                                                    <!--[if BLOCK]><![endif]-->                                                        <a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal" style="-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(79 153 183) 0%, rgb(16 197 132) 100%);" data-bs-target="#kt_modal_upgrade_plan2">Lefoglalás</a>
                                                     <!--[if ENDBLOCK]><![endif]-->
                                                 </div>
                                             </div>
