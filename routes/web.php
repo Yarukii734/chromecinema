@@ -25,22 +25,10 @@ use App\Livewire\StripePayment;
 Route::get('/', FoFooldal::class)->name('fooldal');
 Route::get('/aszf', Aszf::class)->name('aszf');
 Route::get('/adatvedelmi', Adatvedelmi::class)->name('adatvedelmi');
-Route::get('/kosar/success', [Kosar::class, 'success'])->name('kosar.success');
-
-
-Route::get('/payment/success', function () {
-    return view('payment.success');
-})->name('payment.success');
-
-Route::get('/payment/cancel', function () {
-    return view('payment.cancel');
-})->name('payment.cancel');
-
 
 Route::middleware(['web', 'guest'])->group(function () {
     Route::get('/register', Register::class)->name('regisztracio');
     Route::get('/login', Login::class)->name('bejelentkezes');
-    Route::get('/forgot', Forgot::class)->name('elfelejtettjelszo');
 });
 
 Route::middleware(['web', 'auth', 'redirect'])->group(function () {
