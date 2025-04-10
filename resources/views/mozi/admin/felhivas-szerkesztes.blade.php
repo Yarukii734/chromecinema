@@ -293,6 +293,7 @@
               <button
                 type="submit"
                 class="btn btn-primary"
+                style="-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(79 153 183) 0%, rgb(16 197 132) 100%);"
                 wire:loading.attr="disabled"
               >
                 <span wire:loading.remove>
