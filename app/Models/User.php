@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Cart; // Ha kosár modell van
-use App\Models\Movies; // Ha filmekkel kapcsolatos információk vannak
+use App\Models\Cart;
+use App\Models\Movies;
 
 class User extends Authenticatable
 {
@@ -21,7 +21,7 @@ class User extends Authenticatable
         'profilkep',
         'password',
         'admin',
-        'total_spent', // Ne felejtsd el a new total_spent mezőt is hozzáadni!
+        'total_spent',
         'tickets_purchased',
     ];
 
@@ -39,36 +39,31 @@ class User extends Authenticatable
     public function updateProfilePicture($path)
     {
         $this->profilkep = $path;
-        return $this->save();  // Frissíti az adatbázist
+        return $this->save();
     }
-    // Kosár kapcsolat, hogy lekérdezhessük a vásárolt jegyeket
     public function cartItems()
     {
         return $this->hasMany(Cart::class);
     }
     
-    // Vásárolt filmek száma
     public function purchasedMoviesCount()
     {
         return $this->cartItems()->where('type', 'movie')->count();
     }
     
-    // Vásárolt snackek száma
     public function purchasedSnacksCount()
     {
         return $this->cartItems()->where('type', 'snack')->count();
     }
     
-    // Összes költés kiszámítása (a kosár alapján)
     public function cartTotalPrice()
     {
-        return $this->cartItems()->sum('ar'); // Kosárban lévő tételek árának összege
+        return $this->cartItems()->sum('ar');
     }
     
-    // Összes költés adatbázisból
     public function totalSpent()
     {
-        return $this->total_spent ?? 0; // Ha `total_spent` mezőben tárolod
+        return $this->total_spent ?? 0;
     }
     
     public function purchasedMoviesCountProfile()

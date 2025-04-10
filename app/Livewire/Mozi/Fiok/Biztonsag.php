@@ -12,7 +12,6 @@ class Biztonsag extends Component
 
     public function mount()
     {
-        // Lekérjük a felhasználó logjait
         $this->logs = Log::where('user_id', Auth::id())->orderBy('id', 'desc')->get();
     }
 

@@ -39,11 +39,10 @@ class Filmek extends Component
   $darabszam = 1;
  public array $lastClickTimes = [];
 
- public ?Movies $selectedMovie = null; // Kiválasztott film a modalhoz
- public bool $isModalOpen = false; // Modal állapota
+ public ?Movies $selectedMovie = null;
+ public bool $isModalOpen = false;
 
- // Új tömb a kiválasztott székek tárolására
- public array $selectedSeats = []; // [movieId => ['row' => x, 'seat' => y], ...]
+ public array $selectedSeats = [];
 
  protected $listeners = ['ujratoltes' => 'loadCart'];
 
@@ -80,17 +79,14 @@ class Filmek extends Component
          return;
      }
 
-     // Ellenőrzés: ha még nem telt el 3 másodperc
      if (($now - ($this->lastClickTimes[$this->selectedMovie->id] ?? 0)) < 3) {
          $this->dispatch('error', message: 'Várj 3 másodpercet, mielőtt újra megpróbálod!');
          return;
      }
 
-     // Frissítjük az utolsó kattintás idejét
      $this->lastClickTimes[$this->selectedMovie->id] = $now;
 
      try {
-         // Ellenőrizzük, hogy foglalható-e a film
          if (!$this->isBookingAvailable($this->selectedMovie)) {
              return $this->dispatch(
                  'error',
@@ -100,13 +96,12 @@ class Filmek extends Component
 
          $userId = Auth::id();
          $movieId = $this->selectedMovie->id;
-         $addedSeats = []; // Itt tároljuk azokat a székeket, amiket hozzáadtunk a kosárhoz
+         $addedSeats = [];
 
          foreach ($this->selectedSeats[$this->selectedMovie->id] as $seat) {
              $seatRow = $seat['row'];
              $seatColumn = $seat['seat'];
 
-             // Ellenőrizzük, hogy a szék már benne van-e a kosárban
              $existingCartItem = Cart::where('user_id', $userId)
                  ->where('movie_id', $movieId)
                  ->where('seat_row', $seatRow)
@@ -115,7 +110,7 @@ class Filmek extends Component
 
              if ($existingCartItem) {
                  $this->dispatch('error', message: 'A ' . ($seatRow + 1) . '. sor ' . ($seatColumn + 1) . '. szék már a kosárban van!');
-                 continue; // Ha már benne van, ugrunk a következő székre
+                 continue;
              }
 
              Cart::addToCart([
@@ -128,10 +123,9 @@ class Filmek extends Component
                  'seat_column' => $seatColumn,
              ]);
 
-             $addedSeats[] = ['row' => $seatRow, 'seat' => $seatColumn]; // Hozzáadjuk a sikeresen hozzáadott székeket
+             $addedSeats[] = ['row' => $seatRow, 'seat' => $seatColumn];
          }
 
-         // Ha nem adtunk hozzá széket, akkor ne frissítsük a kosarat
          if (empty($addedSeats)) {
              return;
          }
@@ -179,11 +173,9 @@ class Filmek extends Component
 
  private function isBookingAvailable(Movies $movie): bool
  {
-  // Ellenőrizzük, hogy a vetítés időpontja a jövőben van-e
   $vetitesIdatum = $movie->vetitesidatum;
   $vetitesIdopont = $movie->vetitesidopont;
 
-  // Kombináljuk a vetítés dátumát és a vetítés időpontját
   $vetitesIdo = Carbon::parse(
    Carbon::parse($vetitesIdatum)->format('Y-m-d') .
     ' ' .
@@ -200,17 +192,13 @@ class Filmek extends Component
  {
      $darabszam = Config::get('app.mozi_darabszam');
  
-     // Ellenőrizd, hogy a konfigurációs érték létezik-e és numerikus-e
      if (!is_numeric($darabszam)) {
-         // Kezeld az esetet, ha a konfigurációs érték nem érvényes
-         // Itt dobhatsz egy kivételt, vagy visszatérhetsz egy üres tömbbel,
-         // vagy használhatsz egy alapértelmezett értéket
          throw new \Exception('Érvénytelen darabszám konfiguráció!');
      }
  
      $darabszam = (int) $darabszam;
-     $oszlopokSzama = 15; // Fixen 15 oszlop
-     $sorokSzama = (int) ceil($darabszam / $oszlopokSzama); // Sorok számának kiszámítása
+     $oszlopokSzama = 15;
+     $sorokSzama = (int) ceil($darabszam / $oszlopokSzama);
  
      $seats = [];
      $seatCounter = 0;
@@ -244,10 +232,8 @@ class Filmek extends Component
  public function openSeatSelectionModal(int $movieId): void
  {
   $this->selectedMovie = Movies::find($movieId);
-  // Töröljük a korábbi székfoglalásokat, ha vannak
   $this->selectedSeats[$movieId] = [];
 
-  // Ellenőrizzük, hogy a székek inicializálva vannak-e
   if (empty($this->selectedMovie->seats)) {
    $this->selectedMovie->seats = $this->initializeSeats();
    $this->selectedMovie->save();
@@ -260,7 +246,7 @@ class Filmek extends Component
  {
   $this->isModalOpen = false;
   $this->selectedMovie = null;
-  $this->selectedSeats = []; // Töröljük a kiválasztott székeket
+  $this->selectedSeats = [];
  }
 
  public function selectSeat(int $row, int $seat): void
@@ -272,7 +258,6 @@ class Filmek extends Component
      $movieId = $this->selectedMovie->id;
      $userId = Auth::id();
 
-     // Ellenőrizzük, hogy a szék már a kosárban van-e
      $existingCartItem = Cart::where('user_id', $userId)
          ->where('movie_id', $movieId)
          ->where('seat_row', $row)
@@ -281,10 +266,9 @@ class Filmek extends Component
 
      if ($existingCartItem) {
          $this->dispatch('error', message: 'A ' . ($row + 1) . '. sor ' . ($seat + 1) . '. szék már a kosárban van!');
-         return; // Ha már benne van, nem engedélyezzük a kiválasztást
+         return;
      }
 
-     // Ha a szék már ki van választva, töröljük a kiválasztást
      if (isset($this->selectedSeats[$movieId])) {
          foreach ($this->selectedSeats[$movieId] as $key => $selectedSeat) {
              if (
@@ -298,7 +282,6 @@ class Filmek extends Component
          }
      }
 
-     // Hozzáadjuk a kiválasztott széket a tömbhöz
      $this->selectedSeats[$movieId][] = ['row' => $row, 'seat' => $seat];
      $this->dispatch(
          'success',
@@ -334,7 +317,6 @@ class Filmek extends Component
 
  public function changeSeat(): void
  {
-  // Mivel egyszerre több széket lehet választani, a changeSeat funkció nem értelmezhető
   $this->dispatch(
    'error',
    message:
@@ -344,7 +326,7 @@ class Filmek extends Component
 
  private function findOriginalSeat(): ?array
  {
-  return null; // Ez a funkció nem releváns, ha egyszerre több széket is lehet választani
+  return null;
  }
 
  public function getSeatCounts(): array

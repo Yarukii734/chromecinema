@@ -15,7 +15,6 @@ class Logout extends Component {
     public function logout() {
 
         if (Auth::check()) {
-            // Kijelentkezés logolása
             Log::create([
                 'user_id' => Auth::id(),
                 'action' => 'Kijelentkezés',

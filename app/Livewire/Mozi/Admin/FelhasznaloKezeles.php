@@ -32,9 +32,9 @@ class FelhasznaloKezeles extends Component
     public $osszesKoltes;
     public $ujUgyfelekSzama;
     public $legutobbiVasarlas;
-    public $legaktivabbVasarlo; // Új mező
+    public $legaktivabbVasarlo;
     public $topVasarlok = [];
-    public $userLogs = []; // Alapértelmezett érték üres tömb
+    public $userLogs = [];
 
 
     public function mount()
@@ -43,7 +43,7 @@ class FelhasznaloKezeles extends Component
         $this->osszesKoltes = $this->osszesKoltesLekerdezese();
         $this->ujUgyfelekSzama = $this->ujUgyfelekSzamaLekerdezese();
         $this->legutobbiVasarlas = $this->legutobbiVasarlasLekerdezese();
-        $this->legaktivabbVasarlo = $this->legaktivabbVasarloLekerdezese(); // Új metódus hívása
+        $this->legaktivabbVasarlo = $this->legaktivabbVasarloLekerdezese();
         $this->topVasarlokLekerdezese();
     }
 
@@ -81,7 +81,7 @@ class FelhasznaloKezeles extends Component
             'users' => User::paginate(9),
             'ujUgyfelekSzama' => $this->ujUgyfelekSzama,
             'legaktivabbVasarlo' => $this->legaktivabbVasarlo,
-            'userLogs' => $this->userLogs ?? [], // Ha nincs log, akkor üres tömb
+            'userLogs' => $this->userLogs ?? [],
         ]);
     }
     
@@ -113,7 +113,6 @@ class FelhasznaloKezeles extends Component
     public function legutobbiVasarlasLekerdezese()
     {
         try {
-            // Legfrissebb vásárlási log lekérése
             $log = Log::where('action', 'Vásárlás')
                 ->orderByDesc('created_at')
                 ->first();
@@ -123,7 +122,7 @@ class FelhasznaloKezeles extends Component
     
                 $carbon = Carbon::parse($log->created_at);
                 $carbon->locale('hu');
-                $idopont = $carbon->diffForHumans(); // pl. "3 napja"
+                $idopont = $carbon->diffForHumans();
     
                 return "{$user->vezeteknev} {$user->keresztnev} ({$idopont})";
             }
@@ -179,23 +178,17 @@ class FelhasznaloKezeles extends Component
     public function toggleAdminStatus(int $id)
     {
         try {
-            // Felhasználó keresése ID alapján
             $user = User::findOrFail($id);
         
-            // Admin státusz togglézása (1 ha admin, 0 ha nem admin)
             $user->admin = $user->admin == 1 ? 0 : 1;
-            $user->save(); // Módosítások mentése
+            $user->save();
         
-            // Visszajelzés a sikeres módosításról
             $this->dispatch('success', message: $user->admin == 1 ? 'Admin jogok sikeresen hozzárendelve.' : 'Admin jogok eltávolítva.');
             
-            // Frissítjük a kiválasztott felhasználó adatokat
-            $this->user = $user;  // Az admin státuszt a komponensben is frissítjük
+            $this->user = $user;
         } catch (ModelNotFoundException | PDOException) {
-            // Hibakezelés
             $this->dispatch('error', message: 'Adatbázis hiba történt!');
         } catch (Exception) {
-            // Szerver oldali hiba kezelése
             $this->dispatch('error', message: 'Szerveroldali hiba történt!');
         }
     }
@@ -203,31 +196,26 @@ class FelhasznaloKezeles extends Component
     public function getUserLogs(int $id)
     {
         try {
-            // Lekérjük a kiválasztott felhasználó logjait
             $logs = Log::where('user_id', $id)
-                ->orderByDesc('created_at') // Rendezés időpont szerint
-                ->get(); // Az összes log visszaadása
+                ->orderByDesc('created_at')
+                ->get();
     
-            // Ha vannak logok, akkor hozzárendeljük őket, különben üres tömböt rendelünk hozzá
             $this->userLogs = $logs->map(function ($log) {
-                // Carbon példányosítása a log időpontjának feldolgozásához
                 $carbon = Carbon::parse($log->created_at);
-                $carbon->locale('hu'); // Beállítjuk a magyar lokalizációt
+                $carbon->locale('hu');
     
-                // Az eltelt idő formázása
                 $log->created_at_clock = $carbon->diffForHumans(); 
     
                 return $log;
             });
     
-            // Ha nincsenek logok, üres tömböt adunk vissza
             if ($logs->isEmpty()) {
                 $this->userLogs = [];
             }
     
         } catch (Exception) {
             $this->dispatch('error', message: 'Hiba történt a logok lekérésekor!');
-            $this->userLogs = []; // Ha hiba történik, üres tömböt adunk
+            $this->userLogs = [];
         }
     }
     

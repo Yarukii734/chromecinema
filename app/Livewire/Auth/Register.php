@@ -49,7 +49,7 @@ class Register extends Component {
             ]);
 
             Log::create([
-                'user_id' => $user->id, // A regisztrált felhasználó ID-ja
+                'user_id' => $user->id,
                 'action' => 'Regisztráció',
                 'details' => 'Sikeres regisztráció.'
             ]);

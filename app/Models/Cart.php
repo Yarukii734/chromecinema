@@ -16,8 +16,8 @@ class Cart extends Model {
         'snack_id',
         'darabszam',
         'ar',
-        'seat_row', // Új mező a sor számához
-        'seat_column', // Új mező az oszlop számához
+        'seat_row',
+        'seat_column',
     ];
 
     public function movie() {
@@ -36,8 +36,8 @@ class Cart extends Model {
             'snack_id' => $data['type'] === 'snack' ? $data['snack_id'] : null,
             'darabszam' => $data['darabszam'],
             'ar' => $data['ar'],
-            'seat_row' => $data['type'] === 'movie' ? $data['seat_row'] : null, // Szék sor
-            'seat_column' => $data['type'] === 'movie' ? $data['seat_column'] : null, // Szék oszlop
+            'seat_row' => $data['type'] === 'movie' ? $data['seat_row'] : null,
+            'seat_column' => $data['type'] === 'movie' ? $data['seat_column'] : null, 
         ]);
     }    
 

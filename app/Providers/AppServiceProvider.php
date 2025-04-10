@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\URL;
 class AppServiceProvider extends ServiceProvider
 {
     public function boot() {
-        URL::forceScheme('https'); // Mindig kényszeríti a HTTPS-t
+        URL::forceScheme('https');
     }
 
 }
