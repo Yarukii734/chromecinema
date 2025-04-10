@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 10. 09:25
+-- Létrehozás ideje: 2025. Ápr 10. 18:09
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
+--h
 -- Adatbázis: `mozi`
 --
 
@@ -37,12 +37,19 @@ CREATE TABLE `announcements` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+-- --------------------------------------------------------
+
 --
--- A tábla adatainak kiíratása `announcements`
+-- Tábla szerkezet ehhez a táblához `announcement_reads`
 --
 
-INSERT INTO `announcements` (`id`, `title`, `content`, `date`, `createdby`, `created_at`, `updated_at`) VALUES
-(1, 'Teszt', 'Ez az üzenet egy teszt!', '2025-04-09 11:17:40', 'Bojti Patrik', '2025-04-09 09:17:40', '2025-04-09 09:17:40');
+CREATE TABLE `announcement_reads` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `announcement_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- --------------------------------------------------------
 
@@ -107,6 +114,23 @@ CREATE TABLE `logs` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+--
+-- A tábla adatainak kiíratása `logs`
+--
+
+INSERT INTO `logs` (`id`, `user_id`, `action`, `details`, `created_at`, `updated_at`) VALUES
+(1, 86, 'Regisztráció', 'Sikeres regisztráció.', '2025-04-10 09:11:46', '2025-04-10 09:11:46'),
+(2, 86, 'Bejelentkezés', 'Sikeresen beléptél az oldalra.', '2025-04-10 09:11:57', '2025-04-10 09:11:57'),
+(3, 87, 'Regisztráció', 'Sikeres regisztráció.', '2025-04-10 13:07:20', '2025-04-10 13:07:20'),
+(4, 87, 'Bejelentkezés', 'Sikeresen beléptél az oldalra.', '2025-04-10 13:08:18', '2025-04-10 13:08:18'),
+(5, 1, 'Bejelentkezés', 'Sikeresen beléptél az oldalra.', '2025-04-10 13:09:54', '2025-04-10 13:09:54'),
+(6, 1, 'Bejelentkezés', 'Sikeresen beléptél az oldalra.', '2025-04-10 15:04:29', '2025-04-10 15:04:29'),
+(7, 1, 'Kijelentkezés', 'Sikeresen kijelentkeztél.', '2025-04-10 15:16:22', '2025-04-10 15:16:22'),
+(8, 1, 'Bejelentkezés', 'Sikeresen beléptél az oldalra.', '2025-04-10 15:16:54', '2025-04-10 15:16:54'),
+(9, 1, 'Kijelentkezés', 'Sikeresen kijelentkeztél.', '2025-04-10 15:17:53', '2025-04-10 15:17:53'),
+(10, 54, 'Bejelentkezés', 'Sikeresen beléptél az oldalra.', '2025-04-10 15:18:03', '2025-04-10 15:18:03'),
+(11, 1, 'Kosár törlés', 'Sikeresen kitörölted a kosárnak a tartalmát.', '2025-04-10 15:30:40', '2025-04-10 15:30:40');
+
 -- --------------------------------------------------------
 
 --
@@ -144,7 +168,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (36, '2025_03_15_163603_add_total_spent_to_users_table', 21),
 (37, '2025_03_15_165314_add_tickets_purchased_to_users_table', 22),
 (38, '2025_04_07_162229_add_seats_to_movies_table', 23),
-(39, '2025_04_07_164849_add_seat_row_and_column_to_carts_table', 24);
+(39, '2025_04_07_164849_add_seat_row_and_column_to_carts_table', 24),
+(40, '2025_04_10_164507_create_announcement_reads_table', 25);
 
 -- --------------------------------------------------------
 
@@ -449,22 +474,23 @@ INSERT INTO `movies` (`id`, `category_id`, `filmnev`, `film_ev`, `filmleiras`, `
 (285, 2, 'A hullámokon túl', 2024, 'Egy lakatlan szigeten rekedt négyfős család a túlélésért küzd, miközben fény derül a múltjukra, ami megdöbbentő eseményekkel teli mélyrepülést eredményez.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-03-08', '17:05', '1 óra 38 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/paesE1W2WFqJEBNMFUszFVcuDsW.jpg', 120, 1, '2025-02-27 08:30:14', '2025-04-07 17:12:20', NULL),
 (286, 2, 'Egy élet', 2023, 'Nicholas “Nicky” Winton, az ifjú londoni bróker a csehszlovákiai menekültek ügyével foglalkozó brit bizottság munkatársaival, Trevor Chadwickkel és Doreen Warrinerrel 669 gyereket.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-03-10', '14:30', '1 óra 49 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/e84wvrV5C5tj20BJErL1rosl12l.jpg', 120, 1, '2025-02-27 08:31:41', '2025-04-07 17:12:20', NULL),
 (287, 3, 'Veled a jövőben', 2025, 'Carlos és Elena épp a válási szerződést készülnek aláírni, amikor váratlan ajándékot kapnak, amellyel visszautazhatnak az időben. Vissza a 90-es évekbe, a bőrdzsekik, a harsány frizurák és a pop-rock nosztalgikus korszakába..', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-07-15', '12:45', '1 óra 31 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ee9iNQi91kpIkdfsAiGmJO7QdSF.jpg', 120, 1, '2025-02-27 11:16:07', '2025-04-07 17:07:49', NULL),
-(288, 2, 'Sebességmámor', 2024, 'Egy kihágás miatt elbocsátott katona az elhidegült apjához fordul segítségért, hogy elérhesse álmát a motoros SuperSport-világbajnokságon.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-01', '10:50', '1 óra 47 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/2kbc7f3y9U57oryxrb1YaxkZ93E.jpg', 120, 1, '2025-02-27 11:17:53', '2025-04-09 10:05:46', NULL),
+(288, 2, 'Sebességmámor', 2024, 'Egy kihágás miatt elbocsátott katona az elhidegült apjához fordul segítségért, hogy elérhesse álmát a motoros SuperSport-világbajnokságon.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-01', '10:50', '1 óra 47 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/2kbc7f3y9U57oryxrb1YaxkZ93E.jpg', 120, 1, '2025-02-27 11:17:53', '2025-04-10 09:12:38', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (289, 3, 'Rokonszenvedés', 2024, 'A két unokatestvér, David és Benji igazi össze nem illő páros. Együtt vágnak neki egy lengyelországi túrának, hogy adózzanak szeretett nagymamájuk emléke előtt. ', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-07-16', '14:45', '1 óra 30 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/YFBxGIHoiNFrUSRSwUkzky7mSU.jpg', 120, 1, '2025-02-27 11:17:55', '2025-04-07 17:07:49', NULL),
 (290, 3, 'Ghosted', 2023, 'Miután Cole és Sadie randiznak egymással, a lány nem válaszol az üzeneteire. Cole úgy dönt, hogy meglepetés gyanánt Londonba utazik, de ott meglepő felfedezést tesz: kiderül, hogy Sadie titkos ügynök.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-07-17', '18:45', '1 óra 57 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/9BijQY18fWdjTIDmz1i2w8NfsR8.jpg', 120, 1, '2025-02-27 11:18:47', '2025-04-07 17:07:49', NULL),
-(291, 2, '60 perc', 2024, 'A lánya felügyeleti jogáért mindenre hajlandó harcművész lemond egy nagy mérkőzést, hogy Berlinen átszáguldva részt vehessen a lány szülinapi buliján.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-05-02', '12:40', '1 óra 29 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/meiysDOKYlKmj1xEZeibynMHXqo.jpg', 120, 1, '2025-02-27 11:19:03', '2025-04-08 14:37:20', NULL),
+(291, 2, '60 perc', 2024, 'A lánya felügyeleti jogáért mindenre hajlandó harcművész lemond egy nagy mérkőzést, hogy Berlinen átszáguldva részt vehessen a lány szülinapi buliján.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-05-02', '12:40', '1 óra 29 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/meiysDOKYlKmj1xEZeibynMHXqo.jpg', 120, 1, '2025-02-27 11:19:03', '2025-04-10 09:12:40', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (292, 3, 'Borderlands', 2024, 'Lilith, a hírhedt, titokzatos múltú kincsvadász, vonakodva tér vissza hazájába, Pandorára, a galaxis legkaotikusabb bolygójára. Küldetése megtalálni Atlas, az univerzum leghatalmasabb gengszterének eltűnt lányát. ', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-07-18', '22:40', '1 óra 42 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/p0FUR86fX7NeJEvCEVUkn2ib2me.jpg', 120, 1, '2025-02-27 11:19:39', '2025-04-07 17:07:49', NULL),
-(293, 2, 'A szabadság hangja', 2023, 'A film főszereplője a valóságban is létező Tim Ballard szövetségi ügynök, aki 12 éven keresztül nyomozott gyerekkereskedők és pedofilok után.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-03', '15:20', '1 óra 30 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/mCIZlbgLBtNhy1Yz1D4EiZdd6O6.jpg', 120, 1, '2025-02-27 11:20:47', '2025-04-08 14:38:39', NULL),
+(293, 2, 'A szabadság hangja', 2023, 'A film főszereplője a valóságban is létező Tim Ballard szövetségi ügynök, aki 12 éven keresztül nyomozott gyerekkereskedők és pedofilok után.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-03', '15:20', '1 óra 30 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/mCIZlbgLBtNhy1Yz1D4EiZdd6O6.jpg', 120, 1, '2025-02-27 11:20:47', '2025-04-10 09:12:47', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (294, 3, 'Greedy People', 2024, 'Egy valaha békés szigetváros lakóközösségének életét egy szenzációs gyilkosság és az egymillió dollár felfedezése után egyre rosszabb döntések sorozata borítja fel.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-07-19', '12:30', '1 óra 53 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/aIUZiciO0nMh8MrhmsTaMWZvEWK.jpg', 120, 1, '2025-02-27 11:21:24', '2025-04-07 17:07:49', NULL),
 (295, 3, 'A kaszkadőr', 2024, 'Hősünk kaszkadőr, és mint mindenkit a kaszkadőrközösségben, őt is felrobbantják, lelövik, elütik, kidobják ablakokon és leejtik magas helyekről, a mi szórakoztatásunkra.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-07-20', '20:30', '2 óra 7 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vBPAyXEtnqiOnaUzBjgALh6lbxY.jpg', 120, 1, '2025-02-27 11:22:16', '2025-04-07 17:07:49', NULL),
-(296, 2, 'Engedj el mindent', 2024, 'Megtudni, hogy mi számít igazán. Stella áll mindent kézben tart... kivéve óvodáskorú fia állandó figyelemigényét, lánya kamaszkori hangulatingadozásait és érzelmileg elérhetetlen férjét.', NULL, 'https://szalkaimozi.hu/images/ages/5-circle.svg', 1590, '2025-05-04', '16:20', '1 óra 50 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/hIJRqqAaMUtQ13mZL6lCE6myhXH.jpg', 120, 1, '2025-02-27 11:22:28', '2025-04-08 14:13:40', NULL),
+(296, 2, 'Engedj el mindent', 2024, 'Megtudni, hogy mi számít igazán. Stella áll mindent kézben tart... kivéve óvodáskorú fia állandó figyelemigényét, lánya kamaszkori hangulatingadozásait és érzelmileg elérhetetlen férjét.', NULL, 'https://szalkaimozi.hu/images/ages/5-circle.svg', 1590, '2025-05-04', '16:20', '1 óra 50 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/hIJRqqAaMUtQ13mZL6lCE6myhXH.jpg', 120, 1, '2025-02-27 11:22:28', '2025-04-10 09:12:49', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (297, 2, 'Robotálmok', 2023, 'Egy szeretetreméltó kutya magányosan él New Yorkban a nyolcvanas években. Manhattan pulzáló hétköznapjait nincs kivel megosztania, ezért úgy dönt, hogy rendel magának egy robotot.', NULL, 'https://szalkaimozi.hu/images/ages/2-circle.svg', 1590, '2025-05-05', '18:20', '1 óra 42 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/qW6qO1w0ezqnmER3uHiqSc9RkLf.jpg', 120, 1, '2025-02-27 11:23:46', '2025-04-08 14:37:34', NULL),
 (298, 3, 'Egy Minecraft film', 2025, 'Négy kívülálló – Garrett Garrison (Jason Momoa), Henry (Sebastian Eugene Hansen), Natalie (Emma Myers) és Dawn (Danielle Brooks) – kiszakad a mindennapi életéből, amikor egy titokzatos portálon keresztül egy különös világba kerülnek.', NULL, 'https://szalkaimozi.hu/images/ages/2-circle.svg', 1590, '2025-07-21', '22:40', '1 óra 34 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wTxYZNj3NselE9H9dST2GUn4UYE.jpg', 120, 1, '2025-02-27 11:24:06', '2025-04-07 17:07:49', NULL),
 (299, 3, 'Imádlak utálni', 2023, 'A csodálatos első randi után Bea és Ben tüzes vonzalma jéghideggé válik – egészen addig, amíg váratlanul újra össze nem találkoznak egy ausztráliai esküvőn. ', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-07-22', '10:45', '1 óra 43 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/bTZx7eBwXaXPogJiPOqg7KShzmT.jpg', 120, 1, '2025-02-27 11:25:03', '2025-04-07 17:07:49', NULL),
 (300, 2, 'Villám Charlie', 2023, 'A problémamegoldó Charlie-nak van egy megoldhatatlannak tűnő problémája: az általa frissen kiiktatott gengszternek hiányzik a feje, márpedig a munkáért csak úgy tudja felvenni a fizetségét.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-05-06', '9:20', '1 óra 30 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/mfZ0eZH1DWyFUH8U9GXjGwAHg7x.jpg', 120, 1, '2025-02-27 11:25:28', '2025-04-09 08:34:50', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (301, 2, 'Tárgyalás az életért', 2024, 'Amikor az elnököt elrabolják, Alan Bender túsztárgyalót hívják segítségül, aki azon kapja magát, hogy nemcsak az elnököt, hanem a házasságát is neki kell megmentenie.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-09', '12:00', '1 óra 26 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/exQZGRM1Vkv5fzwP2f37RJ72JDb.jpg', 120, 1, '2025-02-27 11:27:01', '2025-04-09 05:22:00', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (302, 3, 'Utódok Vörös felemelkedése', 2024, 'Miután a Szívkirálynő puccsot szít Auradonban, lázadó lánya, Vörös és Hamupipőke perfekcionista lánya, Chloe egyesítik erőiket, és visszautaznak az időben, hogy megpróbálják megfordítani azt a traumatikus eseményt.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-07-23', '14:35', '1 óra 32 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5VQtZtuscFKndDVJNe11Ra53sFn.jpg', 120, 1, '2025-02-27 11:27:19', '2025-04-07 17:07:49', NULL),
-(303, 2, 'A szenvedély íze', 2023, 'A kivételes tehetségű szakácsnő, Eugenie és munkaadója, a nagy gourmet hírében álló Dodin Bouffant húsz éve alkotnak együtt a gyönyörű francia udvarház konyhájában.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-27', '14:30', '2 óra 15 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/iIR7gBSvXwIcIWGEJFJdxuMR0cH.jpg', 120, 1, '2025-02-27 11:28:17', '2025-04-08 18:24:46', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
+(303, 2, 'A szenvedély íze', 2023, 'A kivételes tehetségű szakácsnő, Eugenie és munkaadója, a nagy gourmet hírében álló Dodin Bouffant húsz éve alkotnak együtt a gyönyörű francia udvarház konyhájában.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-27', '14:30', '2 óra 15 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/iIR7gBSvXwIcIWGEJFJdxuMR0cH.jpg', 120, 1, '2025-02-27 11:28:17', '2025-04-08 18:24:46', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]');
+INSERT INTO `movies` (`id`, `category_id`, `filmnev`, `film_ev`, `filmleiras`, `film_szin`, `korhatar`, `jegyar`, `vetitesidatum`, `vetitesidopont`, `idotartam`, `filmkep`, `darabszam`, `foglalhato`, `created_at`, `updated_at`, `seats`) VALUES
 (304, 3, 'Paddington', 2014, 'Paddington, a mackó a legsötétebb perui dzsungelben nőtt fel Lucy nénikéjével. A néni egy angol felfedezővel történő találkozás után abban a szellemben nevelte unokaöccsét, hogy az izgalmas londoni életről álmodozzon. ', NULL, 'https://szalkaimozi.hu/images/ages/2-circle.svg', 1590, '2025-07-24', '20:45', '1 óra 36 perc', 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wpchRGhRhvhtU083PfX2yixXtiw.jpg', 120, 1, '2025-02-27 11:29:57', '2025-04-07 17:07:49', NULL),
 (305, 2, 'A fattyú', 2023, '1755-ben Ludvig Kahlen kapitány elindul, hogy teljesítsen egy lehetetlennek tűnő küldetést: meg akarja hódítani a zord, lakhatatlan dán vidéket. A férfi célja, hogy kolóniát építsen a király nevében.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-04-08', '18:50', '2 óra 7 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/giQcwyUDiNqip2tLq4zF5bfx6Iq.jpg', 120, 1, '2025-02-27 11:43:51', '2025-04-08 14:40:01', NULL),
 (306, 2, 'Tűzpiros égbolt', 2023, 'A film két barát történetét követi nyomon, akik a Balti-tenger partján nyaralnak. Az egyikük képzőművész, a másikuk író, és mindketten azt remélik, hogy a nyaralás inspirálja őket a saját művészetükben.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-05-13', '19:20', '1 óra 43 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/45NASo41ctj7p7D5z4IJFB2DYIw.jpg', 120, 1, '2025-02-27 11:44:53', '2025-04-08 12:26:51', NULL),
@@ -475,8 +501,7 @@ INSERT INTO `movies` (`id`, `category_id`, `filmnev`, `film_ev`, `filmleiras`, `
 (311, 2, 'Pénzeső', 2023, 'Keith Gill megtakarított pénzéből GameStop-részvényt vesz, majd posztol róla. Amikor a közösségi média felrobban, az ő és az őt követők élete, hirtelen megváltozik.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-02', '21:00', '1 óra 45 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/ptawmddSQJ5F2Nt5gLmZD49WbOZ.jpg', 120, 1, '2025-03-01 13:03:14', '2025-04-07 17:12:20', NULL),
 (312, 2, 'Anyai ösztön', 2024, 'Az 1960-as évek elején Alice és Celine, két legjobb barátnő, egyben szomszéd, idillikus, képes magazinba illő életet él precízen nyírt pázsittal, sikeres férjjel és azonos korú fiúgyermekkel.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-03', '17:04', '1 óra 34 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/nDL0xDbBemGWwzpzY7ZGX0f0nq6.jpg', 120, 1, '2025-03-01 13:05:21', '2025-04-08 14:19:59', NULL),
 (313, 2, 'Köztünk élő angyalok', 2024, 'A filmet egy fodrász hihetetlen igaz története ihlette, aki egymaga összefogott egy egész közösséget, hogy segítsen egy megözvegyült apának megmenteni súlyosan beteg kislánya életét.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-04', '20:00', '1 óra 58 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/lUTpnwfVV6KTVWEreE6srltMRUR.jpg', 120, 1, '2025-03-01 13:09:49', '2025-04-08 14:10:56', NULL),
-(314, 2, 'Lány a hullámok hátán', 2024, 'Rendkívüli igaz történet Trudy Ederléről, az első nőről, aki sikeresen átúszta a La Manche csatornát. Nővére állhatatos támogatásának és edzői segítségének köszönhetően sikerült.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-06', '20:00', '2 óra 9 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/yNhtCWgJ78UtEKDziRY9CpYhWi5.jpg', 120, 1, '2025-03-01 13:12:01', '2025-04-08 14:14:45', NULL);
-INSERT INTO `movies` (`id`, `category_id`, `filmnev`, `film_ev`, `filmleiras`, `film_szin`, `korhatar`, `jegyar`, `vetitesidatum`, `vetitesidopont`, `idotartam`, `filmkep`, `darabszam`, `foglalhato`, `created_at`, `updated_at`, `seats`) VALUES
+(314, 2, 'Lány a hullámok hátán', 2024, 'Rendkívüli igaz történet Trudy Ederléről, az első nőről, aki sikeresen átúszta a La Manche csatornát. Nővére állhatatos támogatásának és edzői segítségének köszönhetően sikerült.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-06', '20:00', '2 óra 9 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/yNhtCWgJ78UtEKDziRY9CpYhWi5.jpg', 120, 1, '2025-03-01 13:12:01', '2025-04-08 14:14:45', NULL),
 (315, 2, 'Szökés Pretóriából', 2020, 'Két fehér Dél-afrikait bebörtönöztek, mert az anti-apartheid párti Afrikai Nemzeti Kongresszus (ANC) dolgozói. Elhatározták, hogy megszöknek a Robben-szigeti fehér.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-07', '19:40', '1 óra 42 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/oZqONYHhbyUWGAph2rSV0PZjBbF.jpg', 120, 1, '2025-03-01 13:13:48', '2025-04-08 14:11:23', NULL),
 (316, 2, 'Bíborszín', 2023, 'Éld át három nő kivételes kapcsolódását, akiket megbonthatatlan kötelék köt össze a Bíborszín történetében. A szeretett klasszikus merész újrafeldolgozását Blitz Bazawule rendezte.', NULL, 'https://szalkaimozi.hu/images/ages/3-circle.svg', 1590, '2025-09-08', '18:20', '2 óra 21 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/hRqeN0lZdWssjRInJ33D1h8GtQ7.jpg', 120, 1, '2025-03-01 13:15:46', '2025-04-08 18:24:51', '[[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"],[\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\",\"szabad\"]]'),
 (317, 2, 'Mária', 2024, 'Egy csodálatos fogantatás. Egy kegyetlen király. Egy gyilkos hajsza. Ez a felnőtté válásról szóló bibliai történet Mária utazását mutatja be, hogy életet adjon Jézusnak.', NULL, 'https://szalkaimozi.hu/images/ages/4-circle.svg', 1590, '2025-09-10', '19:20', '1 óra 50 perc', 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2/7eDk9KMko5ouRcnyraR4m5QByOL.jpg', 120, 1, '2025-03-01 13:17:26', '2025-04-08 14:15:00', NULL),
@@ -536,13 +561,6 @@ CREATE TABLE `sessions` (
   `payload` longtext NOT NULL,
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- A tábla adatainak kiíratása `sessions`
---
-
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('AUdSfvMbuvlQLvCvGDg8Ew4cGHcK4pT8QxvkXkqc', NULL, '104.23.162.86', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36', 'ZXlKcGRpSTZJakl2UWtWc09FaDNkV3Q1Wm04eU5IQTJTRXRZVWtFOVBTSXNJblpoYkhWbElqb2lMekF2YzFRNFNFMXNjall3YkdKNldYZDFkVVpLUVRZNVlXWXpTMkl4TDFoSEx6aHFhRXhYVGxRMVVFZFdXRkZwT1VwV1luRXdTM1ZLY0hsMk9XSlBjbHByZUVkUU9UZHdNbm8zTmxWcFYyOTNTeXQ2TVdOWmRFNUNhRzFSVDJSdGQwUkNUVlpyU1VSVFpXWkVRbmhZYjBOSlIyMHZNbkYwYzB4VWVqTjZSWGhZUVVaWEswNWthR0ZsWVZncmVFdElTbmxSUWpneFdYY3JWMkkyU1U1SlVWVlJjVlIyTjJGR2JUazRQU0lzSW0xaFl5STZJbVU1WVRoaFlqQTFORFl6TkRsa09ERTJPVEEzTVRZd1pqZ3pOMlUxWmprME1UTXhNekk0WWpWa1l6UTVNR1kxWXpRNFpEUXhaREU1TjJFMU4yUXdaVElpTENKMFlXY2lPaUlpZlE9PQ==', 1744269881);
 
 -- --------------------------------------------------------
 
@@ -651,32 +669,32 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `vezeteknev`, `keresztnev`, `felhasznalonev`, `email`, `profilkep`, `password`, `admin`, `created_at`, `updated_at`, `total_spent`, `tickets_purchased`) VALUES
 (1, 'Bojti', 'Patrik', 'Yarukii', 'bojtipatrik01@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$aTZOYkI4Q04yWWI5bmk1UA$BQuVCEtLSGaCgP4AvrS+jZQxjxhcSZeA+2cEV0qfGw4', 1, '2023-01-03 16:56:06', '2025-04-09 18:43:31', 2441352, 613),
-(6, 'Elliott Nolan', 'Lisette Pacocha DDS', 'emmie20', 'hintz.hope@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$RzZYaVRYcTdNYlROR09FUw$mnQqhFhMjpDDULkfOwjvD2eoBgm+kwZNKAT6gA6Z+nI', 1, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
-(18, 'Mr. Efren Kutch', 'Rashad Stoltenberg', 'raphaelle.cartwright', 'ikris@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$Uzh2ZkE3NXZUM1N2OVQyLg$EC8DlNc/6tdW6mQEsrRIHFpRsNivRDw8BsNKVuWiH1k', 0, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
-(19, 'Dr. Kay Windler DVM', 'Cayla Mann', 'senger.dale', 'hbeier@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$dFFUTVEvdHZHTmpLcjhtdA$01zJcjRQJHdECnDthwk8cdMIBn+tqb12UxrgZHq+Jeg', 1, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
-(20, 'Shyann Gleichner', 'Prof. Shawn Hauck', 'augustine.sporer', 'bechtelar.alford@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$TDFpQlFYTjJuOWZnR1ZXTg$xx/jr1pnZ8fWCZBJoPOHnjV5RUf+8FGpVGDOTVMQ2OY', 0, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
-(21, 'Meta Bogan', 'Lora Hintz', 'lkemmer', 'keely.zemlak@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$RG52Nk40UXhvY0tFZHBZLw$8seXKTnX6O0Od1lmq/ZukNvfZt733Eyw1d/ZVCoqLMY', 1, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
-(22, 'Dr. Abner Bednar III', 'Glen Hayes', 'uortiz', 'nlakin@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$Z212WkRLdjA1UkhVci9kQw$MZC1WmKjoN9Gl/uSMAaO0NOD1Hl60xkhVYFAY2kv5D4', 1, '2025-02-03 17:02:01', '2025-04-08 17:35:24', 0, 0),
-(23, 'Linwood Schroeder', 'Orin Thiel', 'columbus.effertz', 'ritchie.arlie@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$bjB2UzIyUXJGQmpJSmJ3OA$fr0ukSvSnBu49Xufqch8aBW6ua9z0+rUYE5FqrkAiYY', 0, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
-(24, 'Marcelino Corwin DDS', 'Ulices Ritchie', 'sstiedemann', 'waylon.legros@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$TWJiaEpLUlE3VGlTZENNeA$RHq6o82Qi1SfUvM1VBaiEsupPz8mngfkT5w+zvB9qHE', 1, '2025-02-03 17:02:01', '2025-02-03 17:02:01', 0, 0),
+(6, 'Elliott Nolan', 'Lisette Pacocha DDS', 'emmie20', 'hintz.hope@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$RzZYaVRYcTdNYlROR09FUw$mnQqhFhMjpDDULkfOwjvD2eoBgm+kwZNKAT6gA6Z+nI', 1, '2025-02-03 17:02:01', '2025-04-10 15:51:19', 0, 0),
+(18, 'Mr. Efren Kutch', 'Rashad Stoltenberg', 'raphaelle.cartwright', 'ikris@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$Uzh2ZkE3NXZUM1N2OVQyLg$EC8DlNc/6tdW6mQEsrRIHFpRsNivRDw8BsNKVuWiH1k', 0, '2025-02-03 17:02:01', '2025-04-10 15:51:36', 0, 0),
+(19, 'Dr. Kay Windler DVM', 'Cayla Mann', 'senger.dale', 'hbeier@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$dFFUTVEvdHZHTmpLcjhtdA$01zJcjRQJHdECnDthwk8cdMIBn+tqb12UxrgZHq+Jeg', 1, '2025-02-03 17:02:01', '2025-04-10 15:41:55', 0, 0),
+(20, 'Shyann Gleichner', 'Prof. Shawn Hauck', 'augustine.sporer', 'bechtelar.alford@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$TDFpQlFYTjJuOWZnR1ZXTg$xx/jr1pnZ8fWCZBJoPOHnjV5RUf+8FGpVGDOTVMQ2OY', 0, '2025-02-03 17:02:01', '2025-04-10 15:46:48', 0, 0),
+(21, 'Meta Bogan', 'Lora Hintz', 'lkemmer', 'keely.zemlak@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$RG52Nk40UXhvY0tFZHBZLw$8seXKTnX6O0Od1lmq/ZukNvfZt733Eyw1d/ZVCoqLMY', 1, '2025-02-03 17:02:01', '2025-04-10 15:47:54', 0, 0),
+(22, 'Dr. Abner Bednar III', 'Glen Hayes', 'uortiz', 'nlakin@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$Z212WkRLdjA1UkhVci9kQw$MZC1WmKjoN9Gl/uSMAaO0NOD1Hl60xkhVYFAY2kv5D4', 1, '2025-02-03 17:02:01', '2025-04-10 15:47:50', 0, 0),
+(23, 'Linwood Schroeder', 'Orin Thiel', 'columbus.effertz', 'ritchie.arlie@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$bjB2UzIyUXJGQmpJSmJ3OA$fr0ukSvSnBu49Xufqch8aBW6ua9z0+rUYE5FqrkAiYY', 0, '2025-02-03 17:02:01', '2025-04-10 15:47:01', 0, 0),
+(24, 'Marcelino Corwin DDS', 'Ulices Ritchie', 'sstiedemann', 'waylon.legros@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$TWJiaEpLUlE3VGlTZENNeA$RHq6o82Qi1SfUvM1VBaiEsupPz8mngfkT5w+zvB9qHE', 1, '2025-02-03 17:02:01', '2025-04-10 15:46:51', 0, 0),
 (28, 'Dr. Sonia Nolan', 'Riley Schmeler DVM', 'imelda.ledner', 'edgar49@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$UC40SHd0LkFoU1o5MXZmNw$voWVaAdP1vAlGYggLkNjxsYCr///HeArk6OnZPCVApM', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
 (29, 'Prof. Evert Treutel', 'Thurman Bauch', 'ashly.morissette', 'kbeier@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$YlU2TWd5eEc3OEM1Z0hFaA$uPT92K85EbjhqWjqcvz23YuYSRCrAbB3g6ToNVvVHcA', 1, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
-(30, 'Mr. Tremayne O\'Conner I', 'Amelia Bernhard', 'eichmann.cathryn', 'xdamore@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$TGpzVkJ3cEo2WThhYzBQLg$BYq4nppLE56hZUpmVw3DbXDpO5pp6qBfGCp7TTGYDIg', 1, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
+(30, 'Mr. Tremayne O\'Conner I', 'Amelia Bernhard', 'eichmann.cathryn', 'xdamore@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$TGpzVkJ3cEo2WThhYzBQLg$BYq4nppLE56hZUpmVw3DbXDpO5pp6qBfGCp7TTGYDIg', 1, '2025-01-27 23:00:00', '2025-04-10 15:48:21', 0, 0),
 (31, 'Mrs. Michaela O\'Connell', 'Stephany Maggio', 'meaghan.schoen', 'shyann18@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$QnNqMkUuaHhVUk9XSTFrNA$H38vTFwxrDty13gpwysZW6FkxTRhn50JvFuwgE+mMA0', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
 (32, 'Mr. Clifton Feeney', 'Miss Kiana Ritchie', 'frida.marvin', 'raynor.jaclyn@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$WmZ5Q3ZWQkFwcVhrUTExbg$ijrhwEte96s9TtLyMGHyj6VVM8pR+GGey0ODzu34g0s', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
-(33, 'Harold Hirthe Sr.', 'Ms. Sunny Mueller', 'carroll.anibal', 'marianne.welch@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$V2dlSzNOUFdDQWt5VGsyaQ$zv3k0FvcyeOZf3vQpyh5M0Muxbpk/KeL33RvbLLlaek', 1, '2025-01-27 23:00:00', '2025-04-08 18:11:22', 0, 0),
+(33, 'Harold Hirthe Sr.', 'Ms. Sunny Mueller', 'carroll.anibal', 'marianne.welch@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$V2dlSzNOUFdDQWt5VGsyaQ$zv3k0FvcyeOZf3vQpyh5M0Muxbpk/KeL33RvbLLlaek', 0, '2025-01-27 23:00:00', '2025-04-10 15:48:00', 0, 0),
 (34, 'Zackery Boehm', 'Mr. Kenny Littel', 'smitham.max', 'smayert@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$TzczUlhwVks4MDFOQzc3QQ$ItK0EmYSoAHkC/RC/nf71B1dQrj18IJQ+laJOCFqVW4', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
 (35, 'Constance O\'Reilly', 'Domenick Lang MD', 'oschroeder', 'mckenna.reichert@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$NDdSaFFhcTdyV2JLMTkuYw$AeVzKR93PP2ym2F80LMytUWdspham/BwhOOXzSxKKt0', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
 (36, 'Nona Feest', 'Prof. Mariano Barrows DVM', 'hettinger.tomas', 'betty.jast@example.com', '', '$argon2id$v=19$m=65536,t=4,p=1$a0F0eHd6QjZHYnhrVUdlLg$GUsrjCdmYuLOXfgFq4VRJRiA0IPScESVVcOZMX7vF4I', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
 (37, 'Dino Olson', 'Brett Morissette', 'gkuhic', 'jerde.meggie@example.org', '', '$argon2id$v=19$m=65536,t=4,p=1$Y3hqUDMuZWFNYlFiUVA1Ug$MNk6oFb9wWdUFLkVG1ZbYk2WATzQIryWu0WeqKEt9m4', 0, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
 (38, 'Rosalee Bayer PhD', 'Katharina Muller V', 'leland.oconnell', 'marvin13@example.net', '', '$argon2id$v=19$m=65536,t=4,p=1$QThCY0JEdWJBaWxnbHlRYQ$UiBCtZwuuGGcmR8IrEEkVsXMb8Z1I7s1ohkELiQWvFs', 1, '2025-01-27 23:00:00', '2025-02-03 17:02:52', 0, 0),
-(54, 'Kiskocka', 'Ferkocska', 'feribaba123', 'raczferenc@chromecinema.hu', '', '$argon2id$v=19$m=65536,t=4,p=1$bktTdWFEMEdkLmxsendHUA$gOazF9eNNkTVwlCLJ+oSoWL9bMd4SMg63I/ChqEzF98', 1, '2025-02-11 07:05:52', '2025-04-09 06:50:52', 190200, 43),
-(55, 'Molnár', 'Máté', 'mateqh', 'mate.molnar321@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$cmczL3ouVkc0cnFxaG1CdQ$iFYe1wiiBmGzPXGo3nY2yNZW95bAg/DNcZ/65S/lyhY', 0, '2025-02-21 16:24:19', '2025-03-18 16:28:15', 4180, 2),
-(56, 'teszt', 'teszt', 'tesztfiok', 'teszt@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$S3JpOTQzMjRTemRvY2RoZw$Fq1ohklgBN9nKv43tcEwzHTQFz2P3z2Qh7sdPjBZXCU', 1, '2025-02-27 07:59:35', '2025-02-27 07:59:35', 0, 0),
-(57, 'Kazuma', 'Kiryu', 'kiryu111', 'pappgy66696@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$M3RDMVNka3hVVldXbHlyMQ$SdZ/Utzc3GXmK2Xv49R8ZLhoaTUXbkTTuTE03UUHl04', 0, '2025-03-01 15:51:38', '2025-03-01 15:51:38', 0, 0),
+(54, 'Kiskocka', 'Ferkocska', 'feribaba123', 'raczferenc@chromecinema.hu', '', '$argon2id$v=19$m=65536,t=4,p=1$bktTdWFEMEdkLmxsendHUA$gOazF9eNNkTVwlCLJ+oSoWL9bMd4SMg63I/ChqEzF98', 1, '2025-02-11 07:05:52', '2025-04-10 15:40:22', 190200, 43),
+(55, 'Molnár', 'Máté', 'mateqh', 'mate.molnar321@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$cmczL3ouVkc0cnFxaG1CdQ$iFYe1wiiBmGzPXGo3nY2yNZW95bAg/DNcZ/65S/lyhY', 1, '2025-02-21 16:24:19', '2025-04-10 15:45:14', 4180, 2),
+(56, 'teszt', 'teszt', 'tesztfiok', 'teszt@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$S3JpOTQzMjRTemRvY2RoZw$Fq1ohklgBN9nKv43tcEwzHTQFz2P3z2Qh7sdPjBZXCU', 1, '2025-02-27 07:59:35', '2025-04-10 15:44:52', 0, 0),
+(57, 'Kazuma', 'Kiryu', 'kiryu111', 'pappgy66696@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$M3RDMVNka3hVVldXbHlyMQ$SdZ/Utzc3GXmK2Xv49R8ZLhoaTUXbkTTuTE03UUHl04', 1, '2025-03-01 15:51:38', '2025-04-10 15:43:28', 0, 0),
 (58, 'Du', 'Ci', 'Duci', 'mikloviciu2@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$YzZxeURHaEtXT2xFRmxicg$iDTSkL+DgTH+x+KYueKakO2Q679va/y5QkhezOzrLZI', 0, '2025-03-01 18:27:07', '2025-03-01 18:27:07', 0, 0),
-(59, 'Zsom', 'Borxd', 'zsomborr', 'nagyzsomborrr@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$YWhxVTI0dk1pMmhMcVA5Rg$LgLHZNss6/Cxy6P0P8d/ZSZSXX2YOnSfUuYwdsFAhTE', 0, '2025-03-05 18:23:33', '2025-03-18 16:52:41', 7630, 2),
-(60, 'Heló', 'Szia', 'Valencia', 'pumpkininfo@proton.me', '', '$argon2id$v=19$m=65536,t=4,p=1$MFNacTVtbGFpdHpvek9FUA$O6W2h5pgjQDADs4BGFs11lffEH8NQlVFXE1KAxmx25k', 0, '2025-03-07 10:38:52', '2025-03-07 10:38:52', 0, 0),
+(59, 'Zsom', 'Borxd', 'zsomborr', 'nagyzsomborrr@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$YWhxVTI0dk1pMmhMcVA5Rg$LgLHZNss6/Cxy6P0P8d/ZSZSXX2YOnSfUuYwdsFAhTE', 1, '2025-03-05 18:23:33', '2025-04-10 15:44:56', 7630, 2),
+(60, 'Heló', 'Szia', 'Valencia', 'pumpkininfo@proton.me', '', '$argon2id$v=19$m=65536,t=4,p=1$MFNacTVtbGFpdHpvek9FUA$O6W2h5pgjQDADs4BGFs11lffEH8NQlVFXE1KAxmx25k', 0, '2025-03-07 10:38:52', '2025-04-10 15:51:43', 0, 0),
 (61, 'szeles', 'xd', 'szeles', 'szelesxdd@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$V2NuQ2VaOVlWN1hpZ21yUw$6tjGPKTjoA8cyqzcj5MbrC1y+Hy86apK7Vv+QQq8S2k', 0, '2025-03-12 10:35:36', '2025-03-12 10:35:36', 0, 0),
 (62, 'rohadék', 'geci', 'rohadek', 'rohadek@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$SWFmUWVlZ0pKNXIxdndCZw$Y+vK1oTuCv+uYXYCkuN25bQtyxIJTs8cNXf5WVM38Ho', 0, '2025-03-16 07:56:36', '2025-03-16 07:56:36', 0, 0),
 (63, 'rohadék', 'geci', 'rohadek2', 'rohadek3@gmail.com', '', '$argon2id$v=19$m=65536,t=4,p=1$L3M4Vm1CRFNCNUlvQy5TQg$Bxm48VCaJiY0zylSj13EAO0aNLy/YdhIrPJhcBngafQ', 0, '2025-03-16 07:57:02', '2025-03-16 07:57:02', 0, 0),
@@ -692,7 +710,9 @@ INSERT INTO `users` (`id`, `vezeteknev`, `keresztnev`, `felhasznalonev`, `email`
 (78, 'Nagy', 'Zsé', 'Nigga420', 'nagyzsomborrrrr@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$Vm93T1oveE00ajRac0hOSg$f58BF27CX+dqIb9/4l+0WLsW2yxqQQyHDLwgNqc/pu8', 0, '2025-03-18 16:34:58', '2025-03-18 16:37:23', 31320, 9),
 (79, 'asdasd', 'asdasda', 'ds5443543435', 'ahncastaldo@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$bXhuQ1NybDFheVFPdy9FUg$ViDgptAgU2kaUpt85+nlLZVRcRfHt9n+wL1nDJeKHJw', 0, '2025-03-18 16:42:39', '2025-03-18 16:42:39', 0, 0),
 (83, 'sdfsdf', 'dsfdsf', 'fdsdfssdfdfs', 'sdfos@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$bFFjd1lMbEZmcFlrbHNsTw$6cfhWtoJuEla3v2o46x+V4t9hSJ+98hmnw+bkHDrdKI', 0, '2025-03-22 11:55:05', '2025-03-22 11:55:05', 0, 0),
-(85, 'Juventus', 'wadawd', 'awdawdawd', 'test1@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$SURqNVNSdWE3V2JiL3JDag$H4ZKFx9qj6QKjvjTFMUMdvVmGEM+dVlheDeuUYKH+dM', 0, '2025-04-08 17:00:26', '2025-04-08 17:01:02', 3180, 1);
+(85, 'Juventus', 'wadawd', 'awdawdawd', 'test1@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$SURqNVNSdWE3V2JiL3JDag$H4ZKFx9qj6QKjvjTFMUMdvVmGEM+dVlheDeuUYKH+dM', 0, '2025-04-08 17:00:26', '2025-04-08 17:01:02', 3180, 1),
+(86, 'Gepesz', 'Teszt', 'Gepesztest', 'gepesztest@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$VEYyR0RDdEUyUGNYZ01GTw$jiNRo8AACDkW8wmcGVUiWo0UWItClj1jQgfGv2kmc5U', 0, '2025-04-10 09:11:46', '2025-04-10 09:11:46', 0, 0),
+(87, 'proba', 'cseresznye', 'probacseresznye', 'asd@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=1$dDVRVzFsWmhKczJnbWFIUw$gqxIBxFOPobKR8mf4ojSlUAmu4NSil4v2rkZ4bmzmVM', 1, '2025-04-10 13:07:20', '2025-04-10 13:07:20', 0, 0);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -703,6 +723,14 @@ INSERT INTO `users` (`id`, `vezeteknev`, `keresztnev`, `felhasznalonev`, `email`
 --
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`);
+
+--
+-- A tábla indexei `announcement_reads`
+--
+ALTER TABLE `announcement_reads`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `announcement_reads_user_id_announcement_id_unique` (`user_id`,`announcement_id`),
+  ADD KEY `announcement_reads_announcement_id_foreign` (`announcement_id`);
 
 --
 -- A tábla indexei `cart`
@@ -784,13 +812,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT a táblához `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT a táblához `announcement_reads`
+--
+ALTER TABLE `announcement_reads`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT a táblához `category`
@@ -802,13 +836,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT a táblához `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT a táblához `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT a táblához `movies`
@@ -838,11 +872,18 @@ ALTER TABLE `snack_categories`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- Megkötések a kiírt táblákhoz
 --
+
+--
+-- Megkötések a táblához `announcement_reads`
+--
+ALTER TABLE `announcement_reads`
+  ADD CONSTRAINT `announcement_reads_announcement_id_foreign` FOREIGN KEY (`announcement_id`) REFERENCES `announcements` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `announcement_reads_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Megkötések a táblához `cart`
