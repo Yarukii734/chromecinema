@@ -278,12 +278,21 @@
                 <div class="app-navbar-item ms-1 ms-md-4">
                     <!--begin::Menu- wrapper-->
                     <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" id="kt_menu_item_wow">
-                        <i class="ki-duotone ki-notification-status fs-2">
+                        <i class="ki-duotone ki-notification-status fs-2 {{ $hasUnreadAnnouncements ? 'text-primary' : '' }}">
                             <span class="path1"></span>
                             <span class="path2"></span>
                             <span class="path3"></span>
                             <span class="path4"></span>
+                            @if($hasUnreadAnnouncements)
+                                <i class="ki-duotone ki-notification-status fs-2" style="font-size: 0.7em;"></i>
+                                <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-custom start-50 animation-blink"></span>
+                                <style>.top-custom {
+                                    top: -5px;
+                                }
+                                </style>
+                            @endif
                         </i>
+                        
                     </div>
                     <!--begin::Menu-->
                     <div class="menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px" data-kt-menu="true" id="kt_menu_notifications">
@@ -291,7 +300,8 @@
                         <div class="d-flex flex-column bgi-no-repeat rounded-top" style="background-image:url('{{ asset('https://i.imgur.com/9fgxK54.png') }}')">
                             <!--begin::Title-->
                             <h3 class="text-white fw-semibold px-9 mt-10 mb-6">Felhívások
-                            <span class="fs-8 opacity-75 ps-3">{{ $announcementCount }} darab</span></h3>
+                                <span class="fs-8 opacity-75 ps-3">{{ $announcementCount }} darab</span>
+                            </h3>
                             <!--end::Title-->
                             <!--begin::Tabs-->
                             <ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-semibold px-9">
@@ -313,53 +323,60 @@
                                     <!--begin::Section-->
                                     <div class="pt-10 pb-0" bis_skin_checked="1">
                                         <!--begin::Title-->
-
                                         <!--end::Title-->
                                         <!--begin::Text-->
                                         <div class="scroll-y me-n2 pe-2" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-offset="5px" bis_skin_checked="1" style="height: 300px;">
-                                        @if($announcementCount > 0)
-                                            @foreach($announcements as $announcement)
-                                            <div class="separator my-2" bis_skin_checked="1"></div>
-                                            <div class="carousel-inner pt-6" bis_skin_checked="1">
-                                                                                <!--begin::Item-->
-                                                                                <!--end::Item-->
-                                                                                <!--begin::Item-->
-                                                                                <div class="carousel-item active" bis_skin_checked="1">
-                                                                                    <!--begin::Wrapper-->
-                                                                                    <div class="carousel-wrapper" bis_skin_checked="1">
-                                                                                        <!--begin::Description-->
-                                                                                        <div class="d-flex flex-column flex-grow-1" bis_skin_checked="1">
-                                                                                            <a href="#" class="fw-bold text-dark text-hover-primary">{{ $announcement->title }}</a>
-                                                                                            <p class="text-gray-600 fs-6 fw-semibold pt-3 mb-0">{!! $announcement->content !!}</p>
-                                                                                        </div>
-                                                                                        <!--end::Description-->
-                                                                                        <!--begin::Summary-->
-                                                                                        <div class="d-flex flex-stack pt-8" bis_skin_checked="1">
-                                                                                            <span class="badge badge-light-primary fs-7 fw-bold me-2">{{ $announcement->formatted_date }}</span>
-                                                                                            <a href="#" class="btn btn-light btn-sm btn-color-muted fs-7 fw-bold px-5">{{ $announcement->createdby ?? 'ChromeCinema'}}</a>
-                                                                                        </div>
-                                                                                        <!--end::Summary-->
-                                                                                    </div>
-                                                                                    <!--end::Wrapper-->
-                                                                                </div>
-                                                                                <!--end::Item-->
-                                                                                <!--begin::Item-->
-                                                                                <!--end::Item-->
-                                            </div>
-                                            @endforeach
+                                            @if($announcementCount > 0)
+                                                @foreach($announcements as $announcement)
+                                                    <div class="separator my-2" bis_skin_checked="1"></div>
+                                                    <div class="carousel-inner pt-6" bis_skin_checked="1">
+                                                        <!--begin::Item-->
+                                                        <!--end::Item-->
+                                                        <!--begin::Item-->
+                                                        <div class="carousel-item active" bis_skin_checked="1">
+                                                            <!--begin::Wrapper-->
+                                                            <div class="carousel-wrapper" bis_skin_checked="1">
+                                                                <!--begin::Description-->
+                                                                <div class="d-flex flex-column flex-grow-1" bis_skin_checked="1">
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                        <a class="fw-bold text-dark text-hover-primary">{{ $announcement->title }}</a>
+                                                                        <button wire:click="markAsRead({{ $announcement->id }})" class="btn btn-light btn-sm btn-color-muted fs-7 fw-bold px-5">
+                                                                            @if ($announcement->is_read)
+                                                                                Elolvasva
+                                                                            @else
+                                                                                Megjelölöm olvasottként
+                                                                            @endif
+                                                                        </button>
+                                                                    </div>
+                                                                    <p class="text-gray-600 fs-6 fw-semibold pt-3 mb-0">{!! $announcement->content !!}</p>
+                                                                </div>
+                                                                <!--end::Description-->
+                                                                <!--begin::Summary-->
+                                                                <div class="d-flex flex-stack pt-8" bis_skin_checked="1">
+                                                                    <span class="badge badge-light-primary fs-7 fw-bold me-2">{{ $announcement->formatted_date }}</span>
+                                                                    <span class="btn btn-light btn-sm btn-color-muted fs-7 fw-bold px-5">{{ $announcement->createdby ?? 'ChromeCinema'}}</span>
+                                                                </div>
+                                                                <!--end::Summary-->
+                                                            </div>
+                                                            <!--end::Wrapper-->
+                                                        </div>
+                                                        <!--end::Item-->
+                                                        <!--begin::Item-->
+                                                        <!--end::Item-->
+                                                    </div>
+                                                @endforeach
                                             @else
                                                 <p class="text-center text-muted">Nincs felhívás létrehozva.</p>
                                             @endif
-                                         </div>
+                                        </div>
                                         <!--end::Text-->
                                         <!--begin::Action-->
-                                        <div class="text-center mt-5 mb-9" bis_skin_checked="1">                                            
+                                        <div class="text-center mt-5 mb-9" bis_skin_checked="1">
                                         </div>
                                         <!--end::Action-->
                                     </div>
                                     <!--end::Section-->
                                     <!--begin::Illustration-->
-                                    
                                     <!--end::Illustration-->
                                 </div>
                                 <!--end::Wrapper-->
@@ -373,6 +390,7 @@
                     <!--end::Menu-->
                     <!--end::Menu wrapper-->
                 </div>
+                
                 <!--end::Notifications-->
                 <!--begin::My apps links-->
                 <div class="app-navbar-item ms-1 ms-md-4">

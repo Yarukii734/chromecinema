@@ -13,11 +13,13 @@ class ProfileUpdateNotification extends Mailable
 
     public $user;
 
+    // Konstruktor, hogy át tudd adni a User objektumot
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
+    // Az email felépítése
     public function build()
     {
         return $this->subject('Profilod sikeresen frissítve!')

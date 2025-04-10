@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\AnnouncementRead;
+use App\Models\Cart;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Cart;
 use App\Models\Movies;
 
 class User extends Authenticatable
@@ -36,11 +38,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function updateProfilePicture($path)
-    {
-        $this->profilkep = $path;
-        return $this->save();
-    }
     public function cartItems()
     {
         return $this->hasMany(Cart::class);
@@ -71,4 +68,8 @@ class User extends Authenticatable
         return $this->tickets_purchased ?? 0;
     }
 
+    public function announcementReads(): HasMany
+    {
+        return $this->hasMany(AnnouncementRead::class);
+    }
 }
