@@ -76,12 +76,6 @@ Bátran járulj hozzá a projekthez! Ha hibát találsz, vagy új funkciót java
 
 ---
 
-## 🛡️ Licenc
-
-Ez a projekt a [MIT licenc](LICENSE) alatt érhető el.
-
----
-
 ## 📧 Kapcsolat
 
 Kérdésed van, vagy szeretnél együttműködni? Vedd fel velünk a kapcsolatot: [info@chromecinema.hu](mailto:info@chromecinema.hu)
