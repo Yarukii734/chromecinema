@@ -29,7 +29,7 @@ class Fooldal extends Component {
     public $registrationChangePercentage;
     public $moviesCount;
     public $movies = [];
-    public $currentMovieIndex = 0;
+    public $currentMovieIndex = 0; // Nyomkövetés, hogy melyik filmet mutatjuk
     public $cartItems, $filmnev, $ar, $filmkep, $darabszam = 1;
     
 
@@ -39,8 +39,10 @@ class Fooldal extends Component {
     
         $cartItems = Cart::with('movie')->get();
         
-        $this->currentMovieIndex = 0;
+        // Add initialization for the movie index
+        $this->currentMovieIndex = 0; // Start from the first movie
     
+        // Calculate registration percentage change
         $currentWeekRegistrations = User::whereBetween('created_at', [
             Carbon::now()->startOfWeek(),
             Carbon::now()->endOfWeek()
@@ -62,8 +64,9 @@ class Fooldal extends Component {
         }
     
         Carbon::setLocale('hu');
+        // Setup days of the week
         $days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
-        $moviesCountForWeek = 0;
+        $moviesCountForWeek = 0;  // To accumulate the total count of movies for the week
     
         for ($i = 0; $i < 7; $i++) {
             $date = Carbon::now()->startOfWeek()->addDays($i);
@@ -74,13 +77,15 @@ class Fooldal extends Component {
                 'full_date' => $date->format('Y-m-d')
             ];
     
+            // Count movies for the current day
             $moviesCountForDay = Movies::whereDate('vetitesidatum', $date->format('Y-m-d'))->count();
-            $moviesCountForWeek += $moviesCountForDay;
+            $moviesCountForWeek += $moviesCountForDay;  // Add the day's movie count to the total count for the week
         }
     
+        // Set the total number of movies for the whole week
         $this->moviesCount = $moviesCountForWeek;
     
-        $this->selectedDate = $this->weekDays[0]['full_date'];
+        $this->selectedDate = $this->weekDays[0]['full_date']; // default to Monday
         $this->loadMovies();
     }
     
@@ -89,26 +94,31 @@ class Fooldal extends Component {
         $this->cartItems = Cart::where('user_id', Auth::id())->get();
     }
 
+    // Load movies for the selected date
     public function loadMovies()
     {
         $this->movies = Movies::whereDate('vetitesidatum', $this->selectedDate)->get();
     }
 
+    // Change the selected date
     public function selectDate($date)
     {
         $this->selectedDate = $date;
         $this->loadMovies();
     }
 
+    // Change the current movie index to show the next movie
     public function loadMovieData()
     {
+        // Ensure $this->movies is a Collection instance
         if (is_array($this->movies)) {
-            $movieCount = count($this->movies);
+            $movieCount = count($this->movies); // Use PHP's count() for arrays
         } else {
-            $movieCount = $this->movies->count();
+            $movieCount = $this->movies->count(); // Use count() for Collection objects
         }
     
         if ($movieCount > 0) {
+            // Increment the movie index, looping back to 0 if we reach the end of the list
             $this->currentMovieIndex = ($this->currentMovieIndex + 1) % $movieCount;
         }
     }
@@ -117,11 +127,12 @@ class Fooldal extends Component {
     public function addToCart($movieId)
     {
         if (!Auth::check()) {
+            // Az átirányítást késleltetjük a frontendben JavaScript segítségével
             $this->dispatch('redirectToLogin');
         }
     
         try {
-            $userId = Auth::id();
+            $userId = Auth::id();  // Mentjük a user ID-t
     
             if (!$userId) {
                 $this->dispatch('error', message: 'A film lefoglalásához bejelentkezés szükséges! <b>Átirányítás...</b>');

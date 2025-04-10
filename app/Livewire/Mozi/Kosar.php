@@ -46,6 +46,7 @@ class Kosar extends Component
 
         $this->loadCart();
 
+        // Ne reseteld a végösszeget, ha nem sikerült a vásárlás
         if (request()->query('stripe_return') == 1) {
             if (
                 request()->query('success') == 1 &&
@@ -54,6 +55,7 @@ class Kosar extends Component
                 $movieQuantities = [];
                 $snackQuantities = [];
 
+                // Kosár feldolgozása
                 foreach ($this->cartItems as $item) {
                     if ($item->type === 'snack') {
                         if (!isset($snackQuantities[$item->snack_id])) {
@@ -68,6 +70,7 @@ class Kosar extends Component
                     }
                 }
 
+                // Készletellenőrzés és csökkentés (snack + film)
                 foreach ($snackQuantities as $snackId => $cartQuantity) {
                     Snack::where('id', $snackId)->decrement(
                         'darabszam',
@@ -76,6 +79,7 @@ class Kosar extends Component
                 }
 
                 foreach ($movieQuantities as $movieId => $cartQuantity) {
+                    /** @var Movies $movie */
                     $movie = Movies::find($movieId);
 
                     foreach ($this->cartItems as $item) {
@@ -83,15 +87,18 @@ class Kosar extends Component
                             $item->type === 'movie' &&
                             $item->movie_id === $movieId
                         ) {
+                            // Szék foglalásának kezelése
                             $seatRow = $item->seat_row;
                             $seatColumn = $item->seat_column;
 
+                            // Ellenőrizzük, hogy a szék adatok érvényesek-e
                             if (
                                 $seatRow !== null &&
                                 $seatColumn !== null &&
                                 is_numeric($seatRow) &&
                                 is_numeric($seatColumn)
                             ) {
+                                // Szék állapotának frissítése az adatbázisban
                                 $seats = $movie->seats;
                                 $seats[$seatRow][$seatColumn] = 'foglalt';
                                 $movie->seats = $seats;
@@ -105,6 +112,7 @@ class Kosar extends Component
                     );
                 }
 
+                // Összes jegy számlálása és mentése
                 $totalTickets = array_sum($movieQuantities);
 
                 $user = User::find(Auth::id());
@@ -114,6 +122,7 @@ class Kosar extends Component
                     $user->save();
                 }
 
+                // Logolás
                 foreach ($this->cartItems as $item) {
                     if ($item->type === 'movie') {
                         $movie = Movies::find($item->movie_id);
@@ -267,6 +276,7 @@ class Kosar extends Component
             'sk_test_51R3EGe2MYQhhQhli5e12WyhzXK0tvoAtiXe8G7aqPZCGJZT5iQqgf7QqyXVkI71E9asy6sgqSrSBgz4wGWsVbsxu00LK41b4uj'
         );
 
+        // 1. Ellenőrizd, hogy a kiválasztott székek még szabadok-e
         foreach ($cartItems as $item) {
             if ($item->type === 'movie') {
                 $movie = Movies::find($item->movie_id);
@@ -278,6 +288,7 @@ class Kosar extends Component
                 $seatRow = $item->seat_row;
                 $seatColumn = $item->seat_column;
 
+                // Ellenőrizd, hogy a szék adatok érvényesek-e
                 if (
                     $seatRow === null ||
                     $seatColumn === null ||
@@ -291,6 +302,7 @@ class Kosar extends Component
                     continue;
                 }
 
+                // Ellenőrizd, hogy a szék létezik-e
                 if (
                     !isset($movie->seats[$seatRow][$seatColumn])
                 ) {
@@ -305,6 +317,7 @@ class Kosar extends Component
                     continue;
                 }
 
+                // Ellenőrizd, hogy a szék foglalt-e
                 if ($movie->seats[$seatRow][$seatColumn] === 'foglalt') {
                     $errors[] ='A(z) <b>' .$movie->filmnev .'</b> filmhez a(z) ' .($seatRow+1) .'. sor ' .($seatColumn+1) .'. oszlop már foglalt!<br>';
                     continue;
@@ -314,15 +327,17 @@ class Kosar extends Component
             }
 
             if ($item->type === 'snack') {
-                $snack = Snack::find($item->snack_id);
+                $snack = Snack::find($item->snack_id); // Snack lekérése
                 $totalAmount += $snack->ar;
             }
         }
 
+        // 2. Ha van hiba, dobd vissza a hibákat
         if (!empty($errors)) {
             return $this->dispatch('error', message: implode(' ', $errors));
         }
 
+        // 3. Snack és film készlet ellenőrzése (ahogy eddig is tetted)
         foreach ($snackQuantities as $snackId => $cartQuantity) {
             $snack = Snack::find($snackId);
             if (!$snack) {
@@ -380,24 +395,24 @@ class Kosar extends Component
                             'product_data' => [
                                 'name' => 'Kosár tartalma',
                             ],
-                            'unit_amount' => $totalAmount * 100,
+                            'unit_amount' => $totalAmount * 100, // Az összeg forintban
                         ],
                         'quantity' => 1,
                     ],
                 ],
                 'mode' => 'payment',
                 'success_url' => route('mozi.kosar', [
-                    'token' => bin2hex(random_bytes(128)), 
+                    'token' => bin2hex(random_bytes(128)), // Random token generálása
                     'stripe_return' => 1,
                     'success' => 1,
                 ]),
                 'cancel_url' => route('mozi.kosar', [
                     'stripe_return' => 1,
                     'success' => 0,
-                ]),
+                ]), // Sikertelen fizetés esetén
             ]);
 
-            return redirect()->to($checkoutSession->url);
+            return redirect()->to($checkoutSession->url); // Irányítás a Stripe fizetési oldalra
         } catch (Exception $e) {
             return $this->dispatch(
                 'error',
@@ -409,8 +424,8 @@ class Kosar extends Component
         $this->dispatch('ujratoltes');
         $this->loadCart();
 
-        $this->categories = SnackCategories::all();
-        $this->snacks = Snack::where('category_id', $this->selectedCategory)->get();
+        $this->categories = SnackCategories::all(); // Kategóriák frissítése
+        $this->snacks = Snack::where('category_id', $this->selectedCategory)->get(); // Snacks frissítése a kiválasztott kategóriában
     }
 
     public function nemfoglalhato()

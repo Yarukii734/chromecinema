@@ -12,4 +12,9 @@ class Category extends Model {
         'nev',
         'uuid',
     ];
+
+    public function movies()
+    {
+        return $this->hasMany(Movies::class);
+    }
 }

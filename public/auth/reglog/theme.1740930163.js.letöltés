@@ -1,0 +1,37 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.data('body', () => ({
+        profileMenu: false,
+        basketMenu: false,
+
+        toggleProfileMenu() {
+            this.basketMenu = false
+            this.profileMenu = ! this.profileMenu
+        },
+        toggleBasketMenu() {
+            this.profileMenu = ! this.profileMenu
+            this.basketMenu = true
+        },
+
+        /* get average image color */
+        async getAColor(img) {
+            const fac = new FastAverageColor();
+            return await fac.getColorAsync(img)
+                .then(color => {
+                    return color
+                })
+                .catch(e => {
+                    console.log(e);
+                })
+        }
+    }))
+
+    /* AlpineJS Tab event */
+    Alpine.data('tabs', () => ({
+        activeTab: undefined,
+
+        changeTab(name) {
+            this.activeTab = name
+        },
+    }))
+
+})

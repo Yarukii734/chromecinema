@@ -10,7 +10,7 @@
         <!--begin::Menu-->
         <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
             <li class="menu-item">
-                <a href="{{ route('mozi.fooldal') }}" target="_blank" class="menu-link px-2">Rólunk</a>
+                <a href="{{ route('mozi.rolunk') }}" class="menu-link px-2">Rólunk</a>
             </li>
             <li class="menu-item">
                 <a href="{{ route('mozi.fooldal') }}" target="_blank" class="menu-link px-2">GY.I.K</a>

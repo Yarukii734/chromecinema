@@ -32,7 +32,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::2zmE7ojeFbIIDqLO',
+            '_route' => 'generated::orKl4MpXQNvPfmAc',
           ),
           1 => NULL,
           2 => 
@@ -52,7 +52,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::YjEroOZgPMeg19EC',
+            '_route' => 'generated::ZxZSowPGRlVYD1KS',
           ),
           1 => NULL,
           2 => 
@@ -91,7 +91,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::PnG7pWkjPs7u4GOK',
+            '_route' => 'generated::nOEiktbL0aZOX2cw',
           ),
           1 => NULL,
           2 => 
@@ -111,7 +111,47 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::wTPaEMc5zXS5ol5l',
+            '_route' => 'fooldal',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/aszf' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'aszf',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/adatvedelmi' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'adatvedelmi',
           ),
           1 => NULL,
           2 => 
@@ -305,13 +345,53 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/forgot' => 
+      '/admin/felhivasfeltoltes' => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'elfelejtettjelszo',
+            '_route' => 'mozi.admin.felhivasfeltoltes',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/admin/snackfeltoltes' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'mozi.admin.snackfeltoltes',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/admin/snackszerkesztes' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'mozi.admin.snackszerkesztes',
           ),
           1 => NULL,
           2 => 
@@ -447,7 +527,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::2zmE7ojeFbIIDqLO' => 
+    'generated::orKl4MpXQNvPfmAc' => 
     array (
       'methods' => 
       array (
@@ -459,7 +539,7 @@ app('router')->setCompiledRoutes(
       array (
         'uses' => 'Livewire\\Mechanisms\\FrontendAssets\\FrontendAssets@returnJavaScriptAsFile',
         'controller' => 'Livewire\\Mechanisms\\FrontendAssets\\FrontendAssets@returnJavaScriptAsFile',
-        'as' => 'generated::2zmE7ojeFbIIDqLO',
+        'as' => 'generated::orKl4MpXQNvPfmAc',
       ),
       'fallback' => false,
       'defaults' => 
@@ -475,7 +555,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::YjEroOZgPMeg19EC' => 
+    'generated::ZxZSowPGRlVYD1KS' => 
     array (
       'methods' => 
       array (
@@ -487,7 +567,7 @@ app('router')->setCompiledRoutes(
       array (
         'uses' => 'Livewire\\Mechanisms\\FrontendAssets\\FrontendAssets@maps',
         'controller' => 'Livewire\\Mechanisms\\FrontendAssets\\FrontendAssets@maps',
-        'as' => 'generated::YjEroOZgPMeg19EC',
+        'as' => 'generated::ZxZSowPGRlVYD1KS',
       ),
       'fallback' => false,
       'defaults' => 
@@ -558,7 +638,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::PnG7pWkjPs7u4GOK' => 
+    'generated::nOEiktbL0aZOX2cw' => 
     array (
       'methods' => 
       array (
@@ -586,8 +666,8 @@ app('router')->setCompiledRoutes(
                     return response(\\Illuminate\\Support\\Facades\\View::file(\'C:\\\\xampp\\\\htdocs\\\\ChromeCinema\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Configuration\'.\'/../resources/health-up.blade.php\', [
                         \'exception\' => $exception,
                     ]), status: $exception ? 500 : 200);
-                }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000006b80000000000000000";}}',
-        'as' => 'generated::PnG7pWkjPs7u4GOK',
+                }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000006c60000000000000000";}}',
+        'as' => 'generated::nOEiktbL0aZOX2cw',
       ),
       'fallback' => false,
       'defaults' => 
@@ -603,7 +683,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::wTPaEMc5zXS5ol5l' => 
+    'fooldal' => 
     array (
       'methods' => 
       array (
@@ -617,15 +697,88 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'web',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:44:"function () {
-    return \\view(\'fooldal\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000006bc0000000000000000";}}',
+        'uses' => 'App\\Livewire\\Fooldal@__invoke',
+        'controller' => 'App\\Livewire\\Fooldal',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::wTPaEMc5zXS5ol5l',
+        'as' => 'fooldal',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'aszf' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'aszf',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+        ),
+        'uses' => 'App\\Livewire\\Aszf@__invoke',
+        'controller' => 'App\\Livewire\\Aszf',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'aszf',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'adatvedelmi' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'adatvedelmi',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+        ),
+        'uses' => 'App\\Livewire\\Adatvedelmi@__invoke',
+        'controller' => 'App\\Livewire\\Adatvedelmi',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'adatvedelmi',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1042,29 +1195,114 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'elfelejtettjelszo' => 
+    'mozi.admin.felhivasfeltoltes' => 
     array (
       'methods' => 
       array (
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'forgot',
+      'uri' => 'admin/felhivasfeltoltes',
       'action' => 
       array (
         'middleware' => 
         array (
           0 => 'web',
+          1 => 'web',
+          2 => 'auth',
+          3 => 'redirect',
+          4 => 'admin',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:57:"function () {
-    return \\view(\'authentikacio.forgot\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000006be0000000000000000";}}',
+        'uses' => 'App\\Livewire\\Mozi\\Admin\\FelhivasFeltoltes@__invoke',
+        'controller' => 'App\\Livewire\\Mozi\\Admin\\FelhivasFeltoltes',
+        'as' => 'mozi.admin.felhivasfeltoltes',
         'namespace' => NULL,
-        'prefix' => '',
+        'prefix' => '/admin',
         'where' => 
         array (
         ),
-        'as' => 'elfelejtettjelszo',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'mozi.admin.snackfeltoltes' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'admin/snackfeltoltes',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'web',
+          2 => 'auth',
+          3 => 'redirect',
+          4 => 'admin',
+        ),
+        'uses' => 'App\\Livewire\\Mozi\\Admin\\SnackFeltoltes@__invoke',
+        'controller' => 'App\\Livewire\\Mozi\\Admin\\SnackFeltoltes',
+        'as' => 'mozi.admin.snackfeltoltes',
+        'namespace' => NULL,
+        'prefix' => '/admin',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'mozi.admin.snackszerkesztes' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'admin/snackszerkesztes',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'web',
+          2 => 'auth',
+          3 => 'redirect',
+          4 => 'admin',
+        ),
+        'uses' => 'App\\Livewire\\Mozi\\Admin\\SnackSzerkesztes@__invoke',
+        'controller' => 'App\\Livewire\\Mozi\\Admin\\SnackSzerkesztes',
+        'as' => 'mozi.admin.snackszerkesztes',
+        'namespace' => NULL,
+        'prefix' => '/admin',
+        'where' => 
+        array (
+        ),
       ),
       'fallback' => false,
       'defaults' => 
@@ -1096,7 +1334,7 @@ app('router')->setCompiledRoutes(
                         $config,
                         $isProduction
                     ))($request, $path);
-                }";s:5:"scope";s:47:"Illuminate\\Filesystem\\FilesystemServiceProvider";s:4:"this";N;s:4:"self";s:32:"00000000000006c20000000000000000";}}',
+                }";s:5:"scope";s:47:"Illuminate\\Filesystem\\FilesystemServiceProvider";s:4:"this";N;s:4:"self";s:32:"00000000000006c90000000000000000";}}',
         'as' => 'storage.local',
       ),
       'fallback' => false,

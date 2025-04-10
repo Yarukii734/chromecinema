@@ -101,6 +101,8 @@
       'View' => 'Illuminate\\Support\\Facades\\View',
       'Vite' => 'Illuminate\\Support\\Facades\\Vite',
     ),
+    'mozi_darabszam' => '120',
+    'force_https' => true,
   ),
   'auth' => 
   array (
@@ -256,7 +258,7 @@
   ),
   'filesystems' => 
   array (
-    'default' => 'local',
+    'default' => 'public',
     'disks' => 
     array (
       'local' => 
@@ -272,7 +274,6 @@
         'root' => 'C:\\xampp\\htdocs\\ChromeCinema\\storage\\app/public',
         'url' => 'https://chromecinema.hu/storage',
         'visibility' => 'public',
-        'throw' => false,
       ),
       's3' => 
       array (
@@ -324,31 +325,13 @@
     'lazy_placeholder' => NULL,
     'temporary_file_upload' => 
     array (
-      'disk' => NULL,
-      'rules' => NULL,
-      'directory' => NULL,
-      'middleware' => NULL,
-      'preview_mimes' => 
+      'enabled' => true,
+      'disk' => 'local',
+      'rules' => 
       array (
-        0 => 'png',
-        1 => 'gif',
-        2 => 'bmp',
-        3 => 'svg',
-        4 => 'wav',
-        5 => 'mp4',
-        6 => 'mov',
-        7 => 'avi',
-        8 => 'wmv',
-        9 => 'mp3',
-        10 => 'm4a',
-        11 => 'jpg',
-        12 => 'jpeg',
-        13 => 'mpga',
-        14 => 'webp',
-        15 => 'wma',
+        0 => 'image',
+        1 => 'max:2048',
       ),
-      'max_upload_time' => 5,
-      'cleanup' => true,
     ),
     'render_on_redirect' => false,
     'legacy_model_binding' => false,
@@ -461,7 +444,7 @@
   ),
   'mail' => 
   array (
-    'default' => 'log',
+    'default' => 'smtp',
     'mailers' => 
     array (
       'smtp' => 
@@ -469,10 +452,10 @@
         'transport' => 'smtp',
         'scheme' => NULL,
         'url' => NULL,
-        'host' => '127.0.0.1',
-        'port' => '2525',
-        'username' => NULL,
-        'password' => NULL,
+        'host' => 'smtp.rackhost.hu',
+        'port' => '465',
+        'username' => 'noreply@chromecinema.hu',
+        'password' => 'Noreply0123',
         'timeout' => NULL,
         'local_domain' => 'chromecinema.hu',
       ),
@@ -523,8 +506,8 @@
     ),
     'from' => 
     array (
-      'address' => 'hello@example.com',
-      'name' => 'Mozi',
+      'address' => 'noreply@chromecinema.hu',
+      'name' => 'ChromeCinema',
     ),
     'markdown' => 
     array (
@@ -534,6 +517,9 @@
         0 => 'C:\\xampp\\htdocs\\ChromeCinema\\resources\\views/vendor/mail',
       ),
     ),
+    'host' => 'smtp.rackhost.hu',
+    'port' => '465',
+    'encryption' => 'ssl',
   ),
   'queue' => 
   array (

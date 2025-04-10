@@ -26,12 +26,14 @@ class Navbar extends Component {
         $this->loadAnnouncements();
     }
 
+    // Keresési gomb metódus
     public function search()
     {
         if (empty($this->kereses)) {
             $this->dispatch('error', message: 'A keresési mező nem lehet üres!');
             return;
         }
+        // Ha több, mint 1 karaktert írunk be, keresünk
         if (strlen($this->kereses) > 1) {
             $this->talalatok = Movies::where('filmnev', 'like', '%' . $this->kereses . '%')->get();
             $this->dispatch('success', message: '<b>A keresés sikeres!</b> Nyitsd meg újra a menüt, a kilistázáshoz!');
@@ -54,17 +56,21 @@ class Navbar extends Component {
 
     public function loadAnnouncements()
     {
+        // Beállítjuk a magyar lokalizációt
         Carbon::setLocale('hu');
     
+        // Lekérjük az összes felhívást csökkenő sorrendben
         $this->announcements = Announcement::orderBy('id', 'desc')->get();
     
+        // Formázzuk a dátumokat magyar nyelvre és nagy kezdőbetűvel
         foreach ($this->announcements as $announcement) {
             $date = Carbon::parse($announcement->date);
     
+            // Ha nem az aktuális évben van, akkor kiírjuk az évet
             if ($date->year !== Carbon::now()->year) {
-                $announcement->formatted_date = $date->translatedFormat('Y. F j. - H:i');
+                $announcement->formatted_date = $date->translatedFormat('Y. F j. - H:i'); // Év + hónap + nap + óra
             } else {
-                $announcement->formatted_date = ucfirst($date->translatedFormat('F j. - H:i'));
+                $announcement->formatted_date = ucfirst($date->translatedFormat('F j. - H:i')); // Csak hónap + nap + óra
             }
         }
     
@@ -101,7 +107,7 @@ class Navbar extends Component {
         return view('components.mozi.navbar', [
             'announcements' => $this->announcements,
             'announcementCount' => $this->announcementCount,
-            'talalatok' => $this->talalatok
+            'talalatok' => $this->talalatok // Ide küldjük a találatokat a nézetbe
         ]);
     }
 }

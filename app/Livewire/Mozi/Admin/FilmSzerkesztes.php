@@ -21,9 +21,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class FilmSzerkesztes extends Component
 {
     public ?int $categoryid = null;
-    public ?string $filmnev = '';
-    public ?string $kereses = '';
-    public Collection $talalatok;
+    public ?string $filmnev = ''; // Film név keresés
+    public ?string $kereses = ''; // Keresési mező
+    public Collection $talalatok; // Találatok tárolása Collection típusban
     public ?int $filmev = null;
     public ?string $filmleiras = '';
     public ?string $film_szin = '';
@@ -44,31 +44,40 @@ class FilmSzerkesztes extends Component
     
     public function mount()
     {
+        // Kategóriák betöltése
         $this->categories = Category::orderBy('id', 'asc')->get();
     
-        $this->talalatok = Movies::all();
+        // Alapértelmezett filmek betöltése
+        $this->talalatok = Movies::all();  // Alapértelmezett filmek betöltése
     }
     
     public function search()
     {
+        // Ha a keresési mező üres, akkor az összes filmet betöltjük
         if (empty($this->kereses)) {
             $this->talalatok = Movies::all();
             $this->dispatch('error', message: 'A keresési mező nem lehet üres!');
             return;
         }
     
+        // Ha a keresési szöveg hossza meghaladja az 1 karaktert
         if (strlen($this->kereses) > 1) {
+            // Keresés a film neve alapján
             $moviesQuery = Movies::where('filmnev', 'like', '%' . $this->kereses . '%');
+            // Keresés a kategória neve alapján
             $category = Category::where('nev', 'like', '%' . $this->kereses . '%')->first();
             if ($category) {
+                // Ha találtunk kategóriát, akkor a hozzá tartozó filmeket is megjelenítjük
                 $moviesQuery->orWhereIn('id', $category->movies->pluck('id'));
                 $this->dispatch('success', message: "<b>A keresés sikeres!</b> Kategória: {$category->nev} filmjei is megjelennek.");
             }else{
                 $this->dispatch('success', message: 'A keresés sikeresen befejeződött, és az eredmények megjelenítésre kerültek!');
             }
     
+            // A filmek lekérdezése az összes szűrő alapján
             $this->talalatok = $moviesQuery->get();
         } else {
+            // Ha a keresés túl rövid (kevesebb, mint 2 karakter), üzenetet küldünk
             $this->talalatok = new Collection();
             $this->dispatch('error', message: 'A kereséshez legalább 2 karakter szükséges!');
         }
@@ -169,11 +178,14 @@ class FilmSzerkesztes extends Component
             $movie = Movies::findOrFail($movieId);
             $movie->seats = null;
     
+            // Darabszám beolvasása az .env fájlból
             $darabszam = Config::get('app.mozi_darabszam');
             
+            // Ellenőrizd, hogy a konfigurációs érték létezik-e és numerikus-e
             if (is_numeric($darabszam)) {
-                $movie->darabszam = (int) $darabszam;
+                $movie->darabszam = (int) $darabszam; // Darabszám visszaállítása az .env-ből
             } else {
+                // Kezeld az esetet, ha a konfigurációs érték nem érvényes
                 $this->dispatch('error', message: 'Érvénytelen darabszám konfiguráció!');
                 return;
             }
@@ -190,26 +202,33 @@ class FilmSzerkesztes extends Component
 
     public function render()
     {
+        // Kezdjük egy alapértelmezett lekérdezéssel
         $moviesQuery = Movies::query();
         
+        // Ha van keresési feltétel, szűrjük a filmeket a keresett név vagy kategória alapján
         if (!empty($this->kereses)) {
+            // Keresés a film név alapján
             $moviesQuery->where('filmnev', 'like', '%' . $this->kereses . '%');
     
+            // Keresés a kategória neve alapján
             $category = Category::where('nev', 'like', '%' . $this->kereses . '%')->first();
             if ($category) {
+                // Ha találtunk kategóriát, akkor a hozzá tartozó filmeket is megjelenítjük
                 $moviesQuery->orWhereIn('id', $category->movies->pluck('id'));
                 $this->dispatch('success', message: "<b>A keresés sikeres!</b> Kategória: {$category->nev} filmjei is megjelennek.");
             }
         }
     
-        $movies = $moviesQuery->paginate(10);
+        // Az oldalazás biztosítása
+        $movies = $moviesQuery->paginate(10);  // 10 film per oldal
     
-        $categories = Category::paginate(10);
+        // Kategóriák oldalazása
+        $categories = Category::paginate(10);  // 10 kategória per oldal
         
         return view('mozi.admin.film-szerkesztes', [
-            'movies' => $movies,
-            'categories' => $categories ?? new Collection(),
-            'kereses' => $this->kereses,
+            'movies' => $movies,  // A filmszűrés után oldalazott eredmény
+            'categories' => $categories ?? new Collection(),  // Kategóriák oldalazva
+            'kereses' => $this->kereses,  // A keresett kifejezés átadása a nézetnek
         ]);
     }
     

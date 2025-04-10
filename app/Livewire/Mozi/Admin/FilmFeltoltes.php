@@ -99,7 +99,7 @@ class FilmFeltoltes extends Component
             'filmnev.required' => 'A Film nevének megadása kötelező.', 
             'filmnev.regex' => 'Nem megengedett karakter van a filmnevébe.',
             'filmnev.max' => 'Film neve nem lehet több mint :max karakter.',
-            'filmev.required' => 'A Film éve megadása kötelező.', 
+            'filmev.required' => 'A Film neve megadása kötelező.', 
             'filmev.integer' => 'A Film éve csak szám lehet.', 
             'filmev.min' => 'Film éve nem lehet kisebb mint :min karakter.',
             'filmev.max' => 'Film éve nem lehet több mint :max karakter.',

@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
-class Movies extends Model {
-    
+class Movies extends Model
+{
     protected $table = 'movies';
 
     protected $fillable = [
@@ -22,9 +23,16 @@ class Movies extends Model {
         'filmkep',
         'darabszam',
         'foglalhato',
+        'seats',
     ];
 
-    public function Category() {
+    protected $casts = [
+        'seats' => 'array',
+    ];
+
+    public function Category()
+    {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
 }

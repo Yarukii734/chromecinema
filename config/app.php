@@ -41,6 +41,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'mozi_darabszam' => env('MOZI_DARABSZAM', 120),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL
@@ -53,6 +55,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'force_https' => true,
 
     /*
     |--------------------------------------------------------------------------
