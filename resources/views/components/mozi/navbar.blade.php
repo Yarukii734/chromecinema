@@ -111,7 +111,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{ route('mozi.admin.filmszerkesztes') }}" title="Check out the complete documentation" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <a class="menu-link" href="{{ route('mozi.admin.filmszerkesztes') }}" title="Itt tudod szerkeszteni a filmeket." data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-abstract-26 fs-2">
                                             <span class="path1"></span>
@@ -126,7 +126,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{ route('mozi.admin.felhasznalokezeles') }}">
+                                <a class="menu-link" title="Itt tudod a felhasználókat kezelni." href="{{ route('mozi.admin.felhasznalokezeles') }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-code fs-2">
                                             <span class="path1"></span>
@@ -141,7 +141,7 @@
                             </div>
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{ route('mozi.admin.snackfeltoltes') }}">
+                                <a class="menu-link" title="Itt tudod a snackeket feltölteni." href="{{ route('mozi.admin.snackfeltoltes') }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-code fs-2">
                                             <span class="path1"></span>
@@ -156,7 +156,7 @@
                             </div>
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{ route('mozi.admin.snackszerkesztes') }}">
+                                <a class="menu-link" title="Itt tudod a snackeket szerkeszteni." href="{{ route('mozi.admin.snackszerkesztes') }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-code fs-2">
                                             <span class="path1"></span>
@@ -171,7 +171,7 @@
                             </div>
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{ route('mozi.admin.felhivasfeltoltes') }}">
+                                <a class="menu-link" title="Itt tudod a felhívásokat feltölteni." href="{{ route('mozi.admin.felhivasfeltoltes') }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-code fs-2">
                                             <span class="path1"></span>
