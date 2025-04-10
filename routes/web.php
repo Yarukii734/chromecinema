@@ -19,7 +19,6 @@ use App\Livewire\Mozi\Kosar;
 use App\Livewire\Mozi\Rolunk;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
-use App\Livewire\Admin\AnnouncementSzerkesztes;
 use App\Livewire\Mozi\Admin\FelhivasSzerkesztes;
 use App\Livewire\Mozi\Admin\FelhivasFeltoltes;
 use App\Livewire\StripePayment;
