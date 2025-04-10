@@ -22,7 +22,7 @@ class FelhivasSzerkesztes extends Component
     public ?string $title = '';
     public ?string $content = '';
     public ?string $date = '';
-    public ?int $createdby = null;
+    public ?string $createdby = null;
     public ?Announcement $announcement = null;
 
     public string $kereses = '';
@@ -33,6 +33,7 @@ class FelhivasSzerkesztes extends Component
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'date' => ['required', 'date'],
+            'createdby' => ['required', 'integer'],
         ];
     }
 
@@ -44,6 +45,8 @@ class FelhivasSzerkesztes extends Component
             'content.required' => 'A tartalom megadása kötelező.',
             'date.required' => 'A dátum megadása kötelező.',
             'date.date' => 'Kérlek, érvényes dátumot adj meg.',
+            'createdby.required' => 'A létrehozó ID megadása kötelező.',
+            'createdby.integer' => 'A létrehozó ID számnak kell lennie.',
         ];
     }
 
@@ -56,7 +59,7 @@ class FelhivasSzerkesztes extends Component
     {
         try {
             $announcement = Announcement::findOrFail($id);
-    
+
             $this->announcement = $announcement;
             $this->announcementId = $announcement->id;
             $this->title = $announcement->title;
@@ -68,23 +71,24 @@ class FelhivasSzerkesztes extends Component
         } catch (Exception) {
             $this->dispatch('error', message: 'Váratlan hiba történt!');
         }
-    
+
         $this->dispatch('open-modal');
     }
-    
+
 
     public function mentes(): void
     {
         try {
             $this->validate();
-    
+
             if ($this->announcement) {
                 $this->announcement->update([
                     'title' => $this->title,
                     'content' => $this->content,
                     'date' => Carbon::parse($this->date),
+                    'createdby' => $this->createdby,
                 ]);
-    
+
                 $this->dispatch('close-modal');
                 $this->dispatch('success', message: 'A felhívás sikeresen szerkesztve!');
             } else {
@@ -96,7 +100,7 @@ class FelhivasSzerkesztes extends Component
             $this->dispatch('error', message: 'Váratlan hiba történt!');
         }
     }
-    
+
 
     public function felhivastorles(int $id): void
     {
