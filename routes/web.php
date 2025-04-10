@@ -19,6 +19,8 @@ use App\Livewire\Mozi\Kosar;
 use App\Livewire\Mozi\Rolunk;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
+use App\Livewire\Admin\AnnouncementSzerkesztes;
+use App\Livewire\Mozi\Admin\FelhivasSzerkesztes;
 use App\Livewire\Mozi\Admin\FelhivasFeltoltes;
 use App\Livewire\StripePayment;
 
@@ -50,6 +52,7 @@ Route::middleware(['web', 'auth', 'redirect'])->group(function () {
                     Route::get('/filmszerkesztes', FilmSzerkesztes::class)->name('filmszerkesztes');
                     Route::get('/felhasznalokezeles', FelhasznaloKezeles::class)->name('felhasznalokezeles');
                     Route::get('/felhivasfeltoltes', FelhivasFeltoltes::class)->name('felhivasfeltoltes');
+                    Route::get('/felhivasszerkesztes', FelhivasSzerkesztes::class)->name('felhivasszerkesztes');
                     Route::get('/snackfeltoltes', SnackFeltoltes::class)->name('snackfeltoltes');
                     Route::get('/snackszerkesztes', SnackSzerkesztes::class)->name('snackszerkesztes');
                 });
