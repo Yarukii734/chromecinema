@@ -1,9 +1,0 @@
-# Ignore config file
-*.nogit.php
-
-# Ignore favicon
-*.ico
-
-.idea/
-*.iml
-*.ipr
