@@ -265,16 +265,15 @@
                               />
                             </div>
 
-                            <!-- createdby mező -->
                             <div
                               class="d-flex flex-column mb-5 fv-row"
                               bis_skin_checked="1"
                             >
                               <label class="required fs-5 fw-semibold mb-2"
-                                >Létrehozó ID</label
+                                >Létrehozó</label
                               >
                               <input
-                                type="number"
+                                type="string"
                                 class="form-control form-control-solid"
                                 placeholder=""
                                 wire:model="createdby"

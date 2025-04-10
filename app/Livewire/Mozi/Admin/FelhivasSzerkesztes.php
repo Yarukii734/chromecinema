@@ -22,7 +22,7 @@ class FelhivasSzerkesztes extends Component
     public ?string $title = '';
     public ?string $content = '';
     public ?string $date = '';
-    public ?string $createdby = null;
+    public ?string $createdby = '';
     public ?Announcement $announcement = null;
 
     public string $kereses = '';
@@ -33,7 +33,6 @@ class FelhivasSzerkesztes extends Component
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'date' => ['required', 'date'],
-            'createdby' => ['required', 'integer'],
         ];
     }
 
@@ -45,8 +44,6 @@ class FelhivasSzerkesztes extends Component
             'content.required' => 'A tartalom megadása kötelező.',
             'date.required' => 'A dátum megadása kötelező.',
             'date.date' => 'Kérlek, érvényes dátumot adj meg.',
-            'createdby.required' => 'A létrehozó ID megadása kötelező.',
-            'createdby.integer' => 'A létrehozó ID számnak kell lennie.',
         ];
     }
 
