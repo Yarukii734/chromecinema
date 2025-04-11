@@ -68,6 +68,10 @@ A projekt a következő technológiák és eszközök felhasználásával kész�
     *   A frontend Bootstrap alapú, így a Bootstrap dokumentációja is hasznos lehet: [https://getbootstrap.com/docs](https://getbootstrap.com/docs).
     *   A Livewire-rel kapcsolatos tudnivalók itt találhatók: [https://laravel-livewire.com/docs/2.x/](https://laravel-livewire.com/docs/2.x/).
 
+1. Telepítsd a függőségeket a **Composer** segítségével:
+    ```bash
+    composer install
+    ```
 ---
 
 ## 🤝 Közreműködés
